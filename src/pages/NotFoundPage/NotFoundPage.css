@@ -1,0 +1,8 @@
+.not-found-page {
+  padding: 1rem;
+}
+
+.not-found-page .title {
+  color: var(--white-color);
+  font-size: 5rem;
+}

@@ -1,0 +1,35 @@
+import { Link } from "@src/components/Link/Link";
+
+import "@src/pages/AboutPage/AboutPage.css";
+
+export const AboutPage = (): HTMLElement => {
+  const main = document.createElement("main");
+  main.className = "about-page";
+
+  main.innerHTML = `
+    <h1 class="title">About Page</h1>
+
+    <div class="links"></div>
+  `;
+
+  const links = main.querySelector<HTMLDivElement>(".links");
+
+  const linkProduct = Link({
+    id: "link-product",
+    ariaLabel: "link-product",
+    href: "/#/products/12",
+    children: "Go to Product Page: 12",
+    target: "_self",
+  });
+  const linkStore = Link({
+    id: "link-store",
+    ariaLabel: "link-store",
+    href: "/#/store",
+    children: "Go to Store Page",
+    target: "_self",
+  });
+
+  links!.append(linkProduct, linkStore);
+
+  return main;
+};

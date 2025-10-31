@@ -1,0 +1,12 @@
+import "@src/pages/NotFoundPage/NotFoundPage.css";
+
+export const NotFoundPage = (): HTMLElement => {
+  const main = document.createElement("main");
+  main.className = "not-found-page";
+
+  main.innerHTML = `
+    <h1 class="title">Not Found Page</h1>
+  `;
+
+  return main;
+};

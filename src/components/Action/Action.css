@@ -1,0 +1,7 @@
+.action {
+  padding: 0.5rem;
+  color: var(--black-color);
+  background-color: var(--white-color);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}

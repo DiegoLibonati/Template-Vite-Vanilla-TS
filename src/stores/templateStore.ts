@@ -1,11 +1,11 @@
-import { TemplateState } from "@src/entities/states";
+import type { TemplateState } from "@/types/states";
 
-import { Store } from "@src/core/store";
+import { Store } from "@/core/store";
 
 export class TemplateStore extends Store<TemplateState> {
-  constructor(initialState: TemplateState) {
-    super(initialState);
-  }
+  // constructor(initialState: TemplateState) {
+  //   super(initialState);
+  // }
 
   // Your reducers
 

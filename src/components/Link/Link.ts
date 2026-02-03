@@ -1,6 +1,6 @@
-import { LinkProps } from "@src/entities/props";
+import type { LinkProps } from "@/types/props";
 
-import "@src/components/Link/Link.css";
+import "@/components/Link/Link.css";
 
 export const Link = ({
   id,

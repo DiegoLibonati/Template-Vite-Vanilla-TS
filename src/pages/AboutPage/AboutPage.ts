@@ -1,6 +1,6 @@
-import { Link } from "@src/components/Link/Link";
+import { Link } from "@/components/Link/Link";
 
-import "@src/pages/AboutPage/AboutPage.css";
+import "@/pages/AboutPage/AboutPage.css";
 
 export const AboutPage = (): HTMLElement => {
   const main = document.createElement("main");
@@ -21,6 +21,7 @@ export const AboutPage = (): HTMLElement => {
     children: "Go to Product Page: 12",
     target: "_self",
   });
+
   const linkStore = Link({
     id: "link-store",
     ariaLabel: "link-store",
@@ -29,7 +30,9 @@ export const AboutPage = (): HTMLElement => {
     target: "_self",
   });
 
-  links!.append(linkProduct, linkStore);
+  if (links) {
+    links.append(linkProduct, linkStore);
+  }
 
   return main;
 };

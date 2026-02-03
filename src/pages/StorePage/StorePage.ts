@@ -1,16 +1,17 @@
-import { StoreMain } from "@src/entities/pages";
+import type { StoreMain } from "@/types/pages";
 
-import { Link } from "@src/components/Link/Link";
-import { Action } from "@src/components/Action/Action";
+import { Link } from "@/components/Link/Link";
+import { Action } from "@/components/Action/Action";
 
-import { templateStore } from "@src/stores/templateStore";
+import { templateStore } from "@/stores/templateStore";
 
-import "@src/pages/StorePage/StorePage.css";
+import "@/pages/StorePage/StorePage.css";
 
-const addCounter = (value: number = 1) => {
+const addCounter = (value = 1): void => {
   templateStore.addCounter(value);
 };
-const subtractCounter = (value: number = 1) => {
+
+const subtractCounter = (value = 1): void => {
   templateStore.subtractCounter(value);
 };
 
@@ -40,37 +41,50 @@ export const StorePage = (): HTMLElement => {
     children: "Go to Not Exists Page",
     target: "_self",
   });
+
   const actionSubtract = Action({
     id: "counter-subtract",
     ariaLabel: "counter minus 1",
-    onClick: () => subtractCounter(),
+    onClick: (): void => {
+      subtractCounter();
+    },
     className: "counter__subtract",
     children: "-",
   });
+
   const actionPlus = Action({
     id: "counter-plus",
     ariaLabel: "counter plus 1",
-    onClick: () => addCounter(),
+    onClick: (): void => {
+      addCounter();
+    },
     className: "counter__plus",
     children: "+",
   });
 
-  links!.append(linkNotExists);
-  counter?.append(actionPlus);
-  counter?.insertBefore(actionSubtract, counterNumber);
+  if (links) {
+    links.append(linkNotExists);
+  }
 
-  const renderCounter = () => {
-    const { counter } = templateStore.getState();
+  if (counter && counterNumber) {
+    counter.append(actionPlus);
+    counter.insertBefore(actionSubtract, counterNumber);
+  }
 
-    const counterNumber =
-      document.querySelector<HTMLHeadingElement>(".counter__number");
+  const renderCounter = (): void => {
+    const state = templateStore.getState();
 
-    counterNumber!.textContent = String(counter);
+    if (counterNumber) {
+      counterNumber.textContent = String(state.counter);
+    }
   };
 
-  templateStore.subscribe("counter", renderCounter);
+  const unsubscribe = templateStore.subscribe("counter", renderCounter);
 
-  main.cleanup = () => {
+  main.cleanup = (): void => {
+    unsubscribe();
+    actionSubtract.cleanup();
+    actionPlus.cleanup();
     templateStore.restartCounter();
   };
 

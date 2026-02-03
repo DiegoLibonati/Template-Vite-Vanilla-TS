@@ -1,4 +1,4 @@
-import "@src/pages/NotFoundPage/NotFoundPage.css";
+import "@/pages/NotFoundPage/NotFoundPage.css";
 
 export const NotFoundPage = (): HTMLElement => {
   const main = document.createElement("main");

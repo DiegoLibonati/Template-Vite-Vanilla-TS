@@ -1,6 +1,7 @@
-import { initRouter } from "@src/router/appRouter";
+import "@/index.css";
+import { initRouter } from "@/router/appRouter";
 
-const onInit = () => {
+const onInit = (): void => {
   initRouter();
 };
 

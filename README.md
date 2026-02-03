@@ -9,43 +9,70 @@ The main goal is to explore and demonstrate best practices, patterns, and techno
 ## Getting Started
 
 1. Clone the repository
-2. Join to the correct path of the clone
-3. Execute: `yarn install` or `npm install`
-4. Execute: `yarn run dev` or `npm run dev`
+2. Navigate to the project folder
+3. Execute: `npm install`
+4. Execute: `npm run dev`
+
+The application will open automatically at `http://localhost:3000`
 
 ## Description
 
-Personal template for carrying out a project with Vite Vanilla and TypeScript.
+Personal template for building Single Page Applications with Vite, Vanilla TypeScript, and modern tooling. Includes routing, state management, component architecture, and a complete testing setup.
 
-## Technologies used
+## Technologies Used
 
-1. Typescript
-2. CSS3
+1. TypeScript
+2. Vite
 3. HTML5
-4. Vite
+4. CSS3
 
-## Libraries used
+## Libraries Used
 
-#### Dependencies
-
-```
-There are no dependencies.
-```
-
-#### devDependencies
+### Dependencies
 
 ```
-"@testing-library/dom": "^10.4.0"
-"@testing-library/jest-dom": "^6.6.3"
-"@testing-library/user-event": "^14.5.2"
-"@types/jest": "^29.5.14"
-"jest": "^29.7.0"
-"jest-environment-jsdom": "^29.7.0"
-"ts-jest": "^29.2.5"
-"ts-node": "^10.9.2"
-"typescript": "^5.2.2"
+No production dependencies - Pure Vanilla TypeScript
+```
+
+### DevDependencies
+
+```
+"@eslint/js": "^9.39.2",
+"@testing-library/dom": "^10.4.0",
+"@testing-library/jest-dom": "^6.6.3",
+"@testing-library/user-event": "^14.5.2",
+"@types/jest": "^29.5.14",
+"eslint": "^9.39.2",
+"eslint-config-prettier": "^10.1.8",
+"eslint-plugin-prettier": "^5.5.5",
+"globals": "^17.3.0",
+"husky": "^9.1.7",
+"jest": "^29.7.0",
+"jest-environment-jsdom": "^29.7.0",
+"lint-staged": "^16.2.7",
+"prettier": "^3.8.1",
+"ts-jest": "^29.2.5",
+"ts-node": "^10.9.2",
+"typescript": "^5.2.2",
+"typescript-eslint": "^8.54.0",
 "vite": "^7.1.6"
 ```
+
+## Available Scripts
+
+| Command                 | Description                  |
+| ----------------------- | ---------------------------- |
+| `npm run dev`           | Start development server     |
+| `npm run build`         | Build for production         |
+| `npm run preview`       | Preview production build     |
+| `npm run test`          | Run tests                    |
+| `npm run test:watch`    | Run tests in watch mode      |
+| `npm run test:coverage` | Run tests with coverage      |
+| `npm run lint`          | Check for linting errors     |
+| `npm run lint:fix`      | Fix linting errors           |
+| `npm run format`        | Format code with Prettier    |
+| `npm run format:check`  | Check code formatting        |
+| `npm run type-check`    | Run TypeScript type checking |
 
 ## Portfolio Link
 
@@ -53,36 +80,69 @@ There are no dependencies.
 
 ## Testing
 
-1. Join to the correct path of the clone
-2. Execute: `yarn test` or `npm test`
+1. Navigate to the project folder
+2. Execute: `npm test`
+
+For coverage report:
+
+```bash
+npm run test:coverage
+```
+
+## Env Keys
+
+| Key                                 | Description                                                                        |
+| ----------------------------------- | ---------------------------------------------------------------------------------- |
+| `VITE_REDIRECT_IF_ROUTE_NOT_EXISTS` | If `true`, redirects to home when route doesn't exist. If `false`, shows 404 page. |
+
+```bash
+VITE_REDIRECT_IF_ROUTE_NOT_EXISTS=false
+```
 
 ## Project Structure
 
 ```
-project-root/
+Template-Vite-Vanilla-TS/
+├── __tests__/
+│   ├── __mocks__/
+│   │   ├── file.mock.ts
+│   │   └── style.mock.ts
+│   ├── components/
+│   │   ├── Action.test.ts
+│   │   └── Link.test.ts
+│   ├── helpers/
+│   │   └── getLocalStorage.test.ts
+│   ├── pages/
+│   │   ├── AboutPage.test.ts
+│   │   ├── HomePage.test.ts
+│   │   ├── NotFoundPage.test.ts
+│   │   ├── ProductPage.test.ts
+│   │   └── StorePage.test.ts
+│   ├── router/
+│   │   └── appRouter.test.ts
+│   ├── stores/
+│   │   └── templateStore.test.ts
+│   ├── jest.constants.ts
+│   └── jest.setup.ts
 ├── public/
+│   └── vite.svg
 ├── src/
 │   ├── assets/
-│   │   ├── css/
-│   │   └── export.ts
+│   │   └── index.ts
 │   ├── components/
 │   │   ├── Action/
+│   │   │   ├── Action.ts
+│   │   │   └── Action.css
 │   │   └── Link/
+│   │       ├── Link.ts
+│   │       └── Link.css
 │   ├── constants/
 │   │   ├── envs.ts
 │   │   └── vars.ts
 │   ├── core/
 │   │   └── store.ts
-│   ├── entities/
-│   │   ├── envs.ts
-│   │   ├── pages.ts
-│   │   ├── props.ts
-│   │   ├── router.ts
-│   │   ├── states.ts
-│   │   └── store.ts
 │   ├── helpers/
-│   │   ├── getLocalStorage.ts
-│   │   └── getLocalStorage.test.ts
+│   │   └── getLocalStorage.ts
 │   ├── pages/
 │   │   ├── AboutPage/
 │   │   ├── HomePage/
@@ -94,34 +154,220 @@ project-root/
 │   ├── stores/
 │   │   └── templateStore.ts
 │   ├── styles/
-│   │   ├── colors.ts
-│   │   ├── theme.ts
-│   │   └── index.css
+│   │   └── global.css
+│   ├── types/
+│   │   ├── envs.ts
+│   │   ├── pages.ts
+│   │   ├── props.ts
+│   │   ├── router.ts
+│   │   ├── states.ts
+│   │   └── store.ts
 │   ├── index.css
 │   └── index.ts
-├── tests/
-│   └── jest.setup.ts
-├── tests_mocks/
-│   ├── fileMock.ts
-│   └── styleMock.ts
-└── vite.config.ts
+├── .husky/
+│   └── pre-commit
+├── .vscode/
+│   ├── extensions.json
+│   └── settings.json
+├── .env
+├── .env.example
+├── .gitignore
+├── .prettierignore
+├── .prettierrc
+├── eslint.config.js
+├── index.html
+├── jest.config.ts
+├── package.json
+├── tsconfig.app.json
+├── tsconfig.base.json
+├── tsconfig.json
+├── tsconfig.test.json
+├── vite.config.ts
+└── README.md
 ```
 
-1. `src` -> Root directory of the source code. Contains the full application logic, including components, pages, router, stores, and styles.
-2. `assets` -> Holds static resources such as images, fonts, and CSS files.
-3. `components` -> Contains **reusable UI components** that can be shared across different pages
-4. `constants` -> Holds static configuration values and environment constants.
-5. `core` -> Contains low-level logic shared across the entire app.
-6. `entities` -> Defines all **TypeScript entities, types, and interfaces** used by the project.
-7. `helpers` -> Contains reusable **utility functions** that are not directly tied to UI rendering.
-8. `pages` -> Contains **main views (pages)** of the application. Each subfolder represents a separate page and can include its own `.ts` (logic) and `.css` (styling) files.
-9. `router` -> Handles all routing logic for the SPA (Single Page Application).
-10. `stores` -> Contains specific store implementations that extend the core store system.
-11. `styles` -> Defines the **visual system and theming** of the project.
-12. `index.css` -> Defines the **global styling baseline** for the entire app.
-13. `index.ts` -> The **main entry point** of the application.
-14. `public` -> Contains static files that are served directly by Vite and included in the final build. These files are **not processed by TypeScript or bundling**, so they can be referenced directly in HTML.
-15. `tests` -> This folder contains essential test configurations.
-16. `tests_mocks` -> Contains **mock data, fake APIs, and test doubles** used exclusively in test suites.
+### Folder Descriptions
+
+| Folder                 | Description                                           |
+| ---------------------- | ----------------------------------------------------- |
+| `__tests__/`           | Contains all test files organized by feature          |
+| `__tests__/__mocks__/` | Mock files for static assets (CSS, images)            |
+| `src/assets/`          | Static resources like images and fonts                |
+| `src/components/`      | Reusable UI components with their styles              |
+| `src/constants/`       | Static configuration values and environment variables |
+| `src/core/`            | Core abstractions (Store base class)                  |
+| `src/helpers/`         | Utility functions not tied to UI                      |
+| `src/pages/`           | Page components, each with its own folder             |
+| `src/router/`          | Hash-based routing system                             |
+| `src/stores/`          | State management implementations                      |
+| `src/styles/`          | Global CSS and design tokens                          |
+| `src/types/`           | TypeScript types and interfaces                       |
+
+## Architecture & Design Patterns
+
+### Component Architecture
+
+This project follows a **component-based architecture** for the frontend, where each UI element is self-contained with its own logic and styles.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                         PAGES                               │
+│                  (HomePage, AboutPage, etc.)                │
+│              Compose components and manage state            │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                       COMPONENTS                            │
+│                    (Action, Link, etc.)                     │
+│              Reusable UI elements with props                │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                         STORE                               │
+│                   (Reactive State Management)               │
+│              Observable pattern with subscriptions          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Design Patterns Used
+
+#### 1. Observer Pattern (Store)
+
+**Purpose**: Allows components to subscribe to state changes and react automatically.
+
+**Location**: `src/core/store.ts`
+
+```typescript
+export abstract class Store<T extends Record<string, unknown>> {
+  protected state: T;
+  protected listeners: { [K in keyof T]: Listener<T[K]>[] };
+
+  public subscribe<K extends keyof T>(
+    key: K,
+    listener: Listener<T[K]>
+  ): () => void {
+    this.listeners[key].push(listener);
+    return () => {
+      // Unsubscribe logic
+    };
+  }
+
+  public setState(newState: Partial<T>): void {
+    // Notify listeners when state changes
+  }
+}
+```
+
+**Usage**:
+
+```typescript
+const unsubscribe = templateStore.subscribe("counter", (value) => {
+  console.log("Counter changed:", value);
+});
+```
+
+**Benefit**: Decouples state management from UI components.
+
+#### 2. Factory Pattern (Components)
+
+**Purpose**: Creates UI elements through functions instead of classes.
+
+**Location**: `src/components/Action/Action.ts`
+
+```typescript
+export const Action = ({
+  id,
+  ariaLabel,
+  children,
+  className,
+  onClick,
+}: ActionProps): ActionElement => {
+  const action = document.createElement("button") as ActionElement;
+  action.id = id;
+  // ... configure element
+  return action;
+};
+```
+
+**Benefit**: Simple, functional approach to creating DOM elements with consistent configuration.
+
+#### 3. Hash-based Router
+
+**Purpose**: Enables SPA navigation without server configuration.
+
+**Location**: `src/router/appRouter.ts`
+
+```typescript
+const routes: Route[] = [
+  { path: "/home", component: HomePage },
+  { path: "/about", component: AboutPage },
+  { path: "/products/:id", component: ProductPage },
+];
+
+export const initRouter = (): void => {
+  window.addEventListener("hashchange", renderRoute);
+  renderRoute();
+};
+```
+
+**Features**:
+
+- Dynamic route parameters (`:id`)
+- Automatic cleanup on navigation
+- 404 handling
+
+#### 4. Cleanup Pattern
+
+**Purpose**: Prevents memory leaks by cleaning up event listeners and subscriptions.
+
+**Location**: `src/pages/StorePage/StorePage.ts`
+
+```typescript
+export const StorePage = (): HTMLElement => {
+  const unsubscribe = templateStore.subscribe("counter", renderCounter);
+
+  main.cleanup = (): void => {
+    unsubscribe();
+    actionSubtract.cleanup();
+    actionPlus.cleanup();
+  };
+
+  return main;
+};
+```
+
+**Benefit**: Each page/component manages its own cleanup, preventing memory leaks.
+
+## Code Quality Tools
+
+### ESLint
+
+Configured with TypeScript strict rules:
+
+- Explicit return types required
+- No `any` type allowed
+- Consistent type imports
+- No unused variables
+
+### Prettier
+
+Automatic code formatting:
+
+- 2 spaces indentation
+- Semicolons required
+- Double quotes
+- Trailing commas (ES5)
+
+### Husky + lint-staged
+
+Pre-commit hooks that automatically:
+
+- Run ESLint on staged `.ts` and `.js` files
+- Format code with Prettier
+- Block commits with linting errors
 
 ## Known Issues
+
+None at the moment.

@@ -1,4 +1,4 @@
-import { Envs } from "@src/entities/envs";
+import type { Envs } from "@/types/envs";
 
 const envs: Envs = {
   redirectIfRouteNotExists:

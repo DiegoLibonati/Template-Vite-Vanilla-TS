@@ -1,13 +1,13 @@
-import { PageElement } from "@src/entities/pages";
-import { MatchRoute, Route } from "@src/entities/router";
+import type { PageElement } from "@/types/pages";
+import type { MatchRoute, Route } from "@/types/router";
 
-import { HomePage } from "@src/pages/HomePage/HomePage";
-import { AboutPage } from "@src/pages/AboutPage/AboutPage";
-import { ProductPage } from "@src/pages/ProductPage/ProductPage";
-import { NotFoundPage } from "@src/pages/NotFoundPage/NotFoundPage";
-import { StorePage } from "@src/pages/StorePage/StorePage";
+import { HomePage } from "@/pages/HomePage/HomePage";
+import { AboutPage } from "@/pages/AboutPage/AboutPage";
+import { ProductPage } from "@/pages/ProductPage/ProductPage";
+import { NotFoundPage } from "@/pages/NotFoundPage/NotFoundPage";
+import { StorePage } from "@/pages/StorePage/StorePage";
 
-import envs from "@src/constants/envs";
+import envs from "@/constants/envs";
 
 const PRINCIPAL_ROUTE = "/home";
 const ERROR_ROUTE = "/error";
@@ -24,7 +24,7 @@ const routes: Route[] = [
 const matchRoute = (pathname: string): MatchRoute => {
   for (const route of routes) {
     const paramNames: string[] = [];
-    const regexPath = route.path.replace(/:([^/]+)/g, (_, key) => {
+    const regexPath = route.path.replace(/:([^/]+)/g, (_, key: string) => {
       paramNames.push(key);
       return "([^/]+)";
     });
@@ -35,7 +35,7 @@ const matchRoute = (pathname: string): MatchRoute => {
     if (match) {
       const params = paramNames.reduce<Record<string, string>>(
         (acc, key, i) => {
-          acc[key] = match[i + 1];
+          acc[key] = match[i + 1] ?? "";
           return acc;
         },
         {}
@@ -47,7 +47,7 @@ const matchRoute = (pathname: string): MatchRoute => {
   return null;
 };
 
-export const renderRoute = () => {
+export const renderRoute = (): void => {
   const app = document.querySelector<HTMLDivElement>("#app");
 
   if (!app) return;
@@ -79,7 +79,7 @@ export const renderRoute = () => {
   app.appendChild(element);
 };
 
-export const initRouter = () => {
+export const initRouter = (): void => {
   window.addEventListener("hashchange", renderRoute);
   renderRoute();
 };

@@ -1,6 +1,6 @@
-import { Link } from "@src/components/Link/Link";
+import { Link } from "@/components/Link/Link";
 
-import "@src/pages/HomePage/HomePage.css";
+import "@/pages/HomePage/HomePage.css";
 
 export const HomePage = (): HTMLElement => {
   const main = document.createElement("main");
@@ -23,13 +23,15 @@ export const HomePage = (): HTMLElement => {
   });
 
   const linkAbout2 = Link({
-    id: "link-about",
-    ariaLabel: "link-about",
+    id: "link-about-2",
+    ariaLabel: "link-about-2",
     href: "/#/about",
     children: "Go to About Page in Another Window",
   });
 
-  links!.append(linkAbout, linkAbout2);
+  if (links) {
+    links.append(linkAbout, linkAbout2);
+  }
 
   return main;
 };

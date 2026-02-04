@@ -1,6 +1,6 @@
 import { getLocalStorage } from "@/helpers/getLocalStorage";
 
-import { mocksLocalStorage } from "@tests/jest.constants";
+import { mocksLocalStorage } from "@tests/__mocks__/localStorage.mock";
 
 describe("getLocalStorage", () => {
   describe("when item exists", () => {
@@ -8,7 +8,7 @@ describe("getLocalStorage", () => {
       const mockData = { name: "test", value: 123 };
       mocksLocalStorage.getItem.mockReturnValue(JSON.stringify(mockData));
 
-      const result = getLocalStorage<typeof mockData>("testKey");
+      const result = getLocalStorage("testKey");
 
       expect(mocksLocalStorage.getItem).toHaveBeenCalledWith("testKey");
       expect(result).toEqual(mockData);

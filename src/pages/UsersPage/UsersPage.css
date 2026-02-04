@@ -1,0 +1,35 @@
+.users-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xl);
+  min-height: calc(100vh - var(--header-height));
+}
+
+.users-page .title {
+  color: var(--color-white);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-lg);
+}
+
+.users-page .users-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.users-page .loading {
+  color: var(--color-white);
+  font-size: var(--font-size-lg);
+}
+
+.users-page .error {
+  color: #ff6b6b;
+  font-size: var(--font-size-lg);
+}
+
+.users-page .links {
+  margin-top: var(--spacing-xl);
+}

@@ -29,8 +29,16 @@ export const HomePage = (): HTMLElement => {
     children: "Go to About Page in Another Window",
   });
 
+  const linkUsers = Link({
+    id: "link-users",
+    ariaLabel: "link-about",
+    href: "/#/users",
+    children: "Go to Users Page",
+    target: "_self",
+  });
+
   if (links) {
-    links.append(linkAbout, linkAbout2);
+    links.append(linkAbout, linkAbout2, linkUsers);
   }
 
   return main;

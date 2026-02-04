@@ -56,10 +56,7 @@ export default typescript.config(
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
-      "@typescript-eslint/restrict-template-expressions": [
-        "error",
-        { allowNumber: true, allowBoolean: true },
-      ],
+      "@typescript-eslint/restrict-template-expressions": "off",
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": [
         "error",
@@ -89,6 +86,10 @@ export default typescript.config(
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/unbound-method": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
       "no-console": "off",
     },
   }

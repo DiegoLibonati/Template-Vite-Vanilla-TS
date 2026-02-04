@@ -6,6 +6,7 @@ import { AboutPage } from "@/pages/AboutPage/AboutPage";
 import { ProductPage } from "@/pages/ProductPage/ProductPage";
 import { NotFoundPage } from "@/pages/NotFoundPage/NotFoundPage";
 import { StorePage } from "@/pages/StorePage/StorePage";
+import { UsersPage } from "@/pages/UsersPage/UsersPage";
 
 import envs from "@/constants/envs";
 
@@ -17,6 +18,7 @@ const routes: Route[] = [
   { path: PRINCIPAL_ROUTE, component: HomePage },
   { path: "/about", component: AboutPage },
   { path: "/store", component: StorePage },
+  { path: "/users", component: UsersPage },
   { path: "/products/:id", component: ProductPage },
   { path: ERROR_ROUTE, component: NotFoundPage },
 ];

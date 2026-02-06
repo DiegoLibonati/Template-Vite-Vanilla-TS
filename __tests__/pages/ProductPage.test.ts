@@ -1,48 +1,63 @@
+import { screen } from "@testing-library/dom";
+
 import { ProductPage } from "@/pages/ProductPage/ProductPage";
 
+const renderPage = (params?: { id?: string }): HTMLElement => {
+  const container = ProductPage(params);
+  document.body.appendChild(container);
+  return container;
+};
+
 describe("ProductPage", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   describe("render", () => {
     it("should create a main element", () => {
-      const page = ProductPage();
+      renderPage();
 
-      expect(page.tagName).toBe("MAIN");
+      const main = screen.getByRole("main");
+      expect(main).toBeInTheDocument();
+      expect(main.tagName).toBe("MAIN");
     });
 
     it("should have product-page class", () => {
-      const page = ProductPage();
+      renderPage();
 
-      expect(page.className).toBe("product-page");
+      const main = screen.getByRole("main");
+      expect(main).toHaveClass("product-page");
     });
 
     it("should render title with product id", () => {
-      const page = ProductPage({ id: "123" });
+      renderPage({ id: "123" });
 
-      const title = page.querySelector(".title");
-      expect(title).toBeTruthy();
-      expect(title?.textContent).toContain("123");
+      const title = screen.getByRole("heading", { name: /123/i });
+      expect(title).toBeInTheDocument();
+      expect(title).toHaveClass("title");
     });
 
     it("should render links container", () => {
-      const page = ProductPage();
+      const page = renderPage();
 
-      const links = page.querySelector(".links");
-      expect(links).toBeTruthy();
+      const links = page.querySelector<HTMLDivElement>(".links");
+      expect(links).toBeInTheDocument();
     });
 
     it("should render actions container", () => {
-      const page = ProductPage();
+      const page = renderPage();
 
-      const actions = page.querySelector(".actions");
-      expect(actions).toBeTruthy();
+      const actions = page.querySelector<HTMLDivElement>(".actions");
+      expect(actions).toBeInTheDocument();
     });
   });
 
   describe("with params", () => {
     it("should display product id from params", () => {
-      const page = ProductPage({ id: "456" });
+      renderPage({ id: "456" });
 
-      const title = page.querySelector(".title");
-      expect(title?.textContent).toContain("456");
+      const title = screen.getByRole("heading", { name: /456/i });
+      expect(title).toBeInTheDocument();
     });
   });
 });

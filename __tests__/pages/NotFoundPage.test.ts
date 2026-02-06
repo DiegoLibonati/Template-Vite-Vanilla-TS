@@ -1,25 +1,40 @@
+import { screen } from "@testing-library/dom";
+
 import { NotFoundPage } from "@/pages/NotFoundPage/NotFoundPage";
 
+const renderPage = (): HTMLElement => {
+  const container = NotFoundPage();
+  document.body.appendChild(container);
+  return container;
+};
+
 describe("NotFoundPage", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   describe("render", () => {
     it("should create a main element", () => {
-      const page = NotFoundPage();
+      renderPage();
 
-      expect(page.tagName).toBe("MAIN");
+      const main = screen.getByRole("main");
+      expect(main).toBeInTheDocument();
+      expect(main.tagName).toBe("MAIN");
     });
 
     it("should have not-found-page class", () => {
-      const page = NotFoundPage();
+      renderPage();
 
-      expect(page.className).toBe("not-found-page");
+      const main = screen.getByRole("main");
+      expect(main).toHaveClass("not-found-page");
     });
 
     it("should render title", () => {
-      const page = NotFoundPage();
+      renderPage();
 
-      const title = page.querySelector(".title");
-      expect(title).toBeTruthy();
-      expect(title?.textContent).toBe("Not Found Page");
+      const title = screen.getByRole("heading", { name: "Not Found Page" });
+      expect(title).toBeInTheDocument();
+      expect(title).toHaveClass("title");
     });
   });
 });

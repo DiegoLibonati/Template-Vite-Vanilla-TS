@@ -1,91 +1,113 @@
+import { screen } from "@testing-library/dom";
+
+import type { LinkProps } from "@/types/props";
+
 import { Link } from "@/components/Link/Link";
 
+const renderComponent = (props: LinkProps): HTMLAnchorElement => {
+  const container = Link(props);
+  document.body.appendChild(container);
+  return container;
+};
+
 describe("Link", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   describe("render", () => {
     it("should create an anchor element", () => {
-      const link = Link({
+      renderComponent({
         id: "test-id",
         href: "/test",
         ariaLabel: "test label",
       });
 
+      const link = screen.getByRole("link", { name: "test label" });
+      expect(link).toBeInTheDocument();
       expect(link.tagName).toBe("A");
     });
 
     it("should set correct id", () => {
-      const link = Link({
+      renderComponent({
         id: "my-link",
         href: "/test",
         ariaLabel: "test label",
       });
 
+      const link = screen.getByRole("link", { name: "test label" });
       expect(link.id).toBe("my-link");
     });
 
     it("should set href attribute", () => {
-      const link = Link({
+      renderComponent({
         id: "test-id",
         href: "/about",
         ariaLabel: "test label",
       });
 
-      expect(link.href).toContain("/about");
+      const link = screen.getByRole("link", { name: "test label" });
+      expect(link).toHaveAttribute("href", "/about");
     });
 
     it("should set aria-label attribute", () => {
-      const link = Link({
+      renderComponent({
         id: "test-id",
         href: "/test",
         ariaLabel: "go to about page",
       });
 
-      expect(link.getAttribute("aria-label")).toBe("go to about page");
+      const link = screen.getByRole("link", { name: "go to about page" });
+      expect(link).toHaveAccessibleName("go to about page");
     });
 
     it("should set children as innerHTML", () => {
-      const link = Link({
+      renderComponent({
         id: "test-id",
         href: "/test",
         ariaLabel: "test label",
         children: "Click Here",
       });
 
+      const link = screen.getByRole("link", { name: "test label" });
       expect(link.innerHTML).toBe("Click Here");
     });
 
     it("should apply custom className", () => {
-      const link = Link({
+      renderComponent({
         id: "test-id",
         href: "/test",
         ariaLabel: "test label",
         className: "custom-link",
       });
 
-      expect(link.className).toContain("link");
-      expect(link.className).toContain("custom-link");
+      const link = screen.getByRole("link", { name: "test label" });
+      expect(link).toHaveClass("link", "custom-link");
     });
   });
 
   describe("target", () => {
     it("should default to _blank when no target provided", () => {
-      const link = Link({
+      renderComponent({
         id: "test-id",
         href: "/test",
         ariaLabel: "test label",
       });
 
-      expect(link.target).toBe("_blank");
+      const link = screen.getByRole("link", { name: "test label" });
+      expect(link).toHaveAttribute("target", "_blank");
     });
 
     it("should use provided target", () => {
-      const link = Link({
+      renderComponent({
         id: "test-id",
         href: "/test",
         ariaLabel: "test label",
         target: "_self",
       });
 
-      expect(link.target).toBe("_self");
+      const link = screen.getByRole("link", { name: "test label" });
+      expect(link).toHaveAttribute("target", "_self");
     });
   });
 });

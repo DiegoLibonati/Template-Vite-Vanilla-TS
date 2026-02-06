@@ -1,38 +1,53 @@
+import { screen } from "@testing-library/dom";
+
 import { HomePage } from "@/pages/HomePage/HomePage";
 
+const renderPage = (): HTMLElement => {
+  const container = HomePage();
+  document.body.appendChild(container);
+  return container;
+};
+
 describe("HomePage", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   describe("render", () => {
     it("should create a main element", () => {
-      const page = HomePage();
+      renderPage();
 
-      expect(page.tagName).toBe("MAIN");
+      const main = screen.getByRole("main");
+      expect(main).toBeInTheDocument();
+      expect(main.tagName).toBe("MAIN");
     });
 
     it("should have home-page class", () => {
-      const page = HomePage();
+      renderPage();
 
-      expect(page.className).toBe("home-page");
+      const main = screen.getByRole("main");
+      expect(main).toHaveClass("home-page");
     });
 
     it("should render title", () => {
-      const page = HomePage();
+      renderPage();
 
-      const title = page.querySelector(".title");
-      expect(title).toBeTruthy();
-      expect(title?.textContent).toBe("Home Page");
+      const title = screen.getByRole("heading", { name: "Home Page" });
+      expect(title).toBeInTheDocument();
+      expect(title).toHaveClass("title");
     });
 
     it("should render links container", () => {
-      const page = HomePage();
+      const page = renderPage();
 
-      const links = page.querySelector(".links");
-      expect(links).toBeTruthy();
+      const links = page.querySelector<HTMLDivElement>(".links");
+      expect(links).toBeInTheDocument();
     });
 
     it("should contain navigation links", () => {
-      const page = HomePage();
+      renderPage();
 
-      const links = page.querySelectorAll("a");
+      const links = screen.getAllByRole("link");
       expect(links.length).toBeGreaterThan(0);
     });
   });

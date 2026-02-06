@@ -26,8 +26,8 @@ describe("appRouter", () => {
 
       renderRoute();
 
-      const app = document.querySelector("#app");
-      expect(app?.querySelector(".home-page")).toBeTruthy();
+      const app = document.querySelector<HTMLDivElement>("#app");
+      expect(app?.querySelector<HTMLElement>(".home-page")).toBeTruthy();
     });
 
     it("should render AboutPage for /about route", () => {
@@ -35,8 +35,8 @@ describe("appRouter", () => {
 
       renderRoute();
 
-      const app = document.querySelector("#app");
-      expect(app?.querySelector(".about-page")).toBeTruthy();
+      const app = document.querySelector<HTMLDivElement>("#app");
+      expect(app?.querySelector<HTMLElement>(".about-page")).toBeTruthy();
     });
 
     it("should render StorePage for /store route", () => {
@@ -44,8 +44,8 @@ describe("appRouter", () => {
 
       renderRoute();
 
-      const app = document.querySelector("#app");
-      expect(app?.querySelector(".store-page")).toBeTruthy();
+      const app = document.querySelector<HTMLDivElement>("#app");
+      expect(app?.querySelector<HTMLElement>(".store-page")).toBeTruthy();
     });
 
     it("should render ProductPage with params for /products/:id route", () => {
@@ -53,8 +53,8 @@ describe("appRouter", () => {
 
       renderRoute();
 
-      const app = document.querySelector("#app");
-      expect(app?.querySelector(".product-page")).toBeTruthy();
+      const app = document.querySelector<HTMLDivElement>("#app");
+      expect(app?.querySelector<HTMLElement>(".product-page")).toBeTruthy();
     });
 
     it("should render NotFoundPage for /error route", () => {
@@ -62,8 +62,8 @@ describe("appRouter", () => {
 
       renderRoute();
 
-      const app = document.querySelector("#app");
-      expect(app?.querySelector(".not-found-page")).toBeTruthy();
+      const app = document.querySelector<HTMLDivElement>("#app");
+      expect(app?.querySelector<HTMLElement>(".not-found-page")).toBeTruthy();
     });
   });
 
@@ -86,7 +86,7 @@ describe("appRouter", () => {
 
       initRouter();
 
-      const app = document.querySelector("#app");
+      const app = document.querySelector<HTMLDivElement>("#app");
       expect(app?.children.length).toBeGreaterThan(0);
     });
   });

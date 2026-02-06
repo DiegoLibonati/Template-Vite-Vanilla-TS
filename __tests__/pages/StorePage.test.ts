@@ -1,69 +1,86 @@
+import { screen } from "@testing-library/dom";
+
 import type { PageElement } from "@/types/pages";
 
 import { StorePage } from "@/pages/StorePage/StorePage";
+
 import { templateStore } from "@/stores/templateStore";
+
+const renderPage = (): PageElement => {
+  const container = StorePage() as PageElement;
+  document.body.appendChild(container);
+  return container;
+};
 
 describe("StorePage", () => {
   beforeEach(() => {
     templateStore.restartCounter();
   });
 
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   describe("render", () => {
     it("should create a main element", () => {
-      const page = StorePage();
+      renderPage();
 
-      expect(page.tagName).toBe("MAIN");
+      const main = screen.getByRole("main");
+      expect(main).toBeInTheDocument();
+      expect(main.tagName).toBe("MAIN");
     });
 
     it("should have store-page class", () => {
-      const page = StorePage();
+      renderPage();
 
-      expect(page.className).toBe("store-page");
+      const main = screen.getByRole("main");
+      expect(main).toHaveClass("store-page");
     });
 
     it("should render title", () => {
-      const page = StorePage();
+      renderPage();
 
-      const title = page.querySelector(".title");
-      expect(title).toBeTruthy();
-      expect(title?.textContent).toBe("Store Page");
+      const title = screen.getByRole("heading", { name: "Store Page" });
+      expect(title).toBeInTheDocument();
+      expect(title).toHaveClass("title");
     });
 
     it("should render counter section", () => {
-      const page = StorePage();
+      const page = renderPage();
 
-      const counter = page.querySelector(".counter");
-      expect(counter).toBeTruthy();
+      const counter = page.querySelector<HTMLDivElement>(".counter");
+      expect(counter).toBeInTheDocument();
     });
 
     it("should render counter number", () => {
-      const page = StorePage();
+      renderPage();
 
-      const counterNumber = page.querySelector(".counter__number");
-      expect(counterNumber).toBeTruthy();
-      expect(counterNumber?.textContent).toBe("0");
+      const counterNumber = screen.getByRole("heading", { name: "0" });
+      expect(counterNumber).toBeInTheDocument();
+      expect(counterNumber).toHaveClass("counter__number");
     });
 
     it("should render action buttons", () => {
-      const page = StorePage();
+      const page = renderPage();
 
-      const subtractBtn = page.querySelector(".counter__subtract");
-      const plusBtn = page.querySelector(".counter__plus");
+      const subtractBtn =
+        page.querySelector<HTMLButtonElement>(".counter__subtract");
+      const plusBtn = page.querySelector<HTMLButtonElement>(".counter__plus");
 
-      expect(subtractBtn).toBeTruthy();
-      expect(plusBtn).toBeTruthy();
+      expect(subtractBtn).toBeInTheDocument();
+      expect(plusBtn).toBeInTheDocument();
     });
   });
 
   describe("cleanup", () => {
     it("should have cleanup function", () => {
-      const page = StorePage() as PageElement;
+      const page = renderPage();
 
       expect(typeof page.cleanup).toBe("function");
     });
 
     it("should reset counter on cleanup", () => {
-      const page = StorePage() as PageElement;
+      const page = renderPage();
       templateStore.addCounter(10);
 
       page.cleanup?.();

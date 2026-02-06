@@ -1,6 +1,16 @@
+import { screen } from "@testing-library/dom";
+
+import type { User } from "@/types/app";
+
 import { UserCard } from "@/components/UserCard/UserCard";
 
 import { mockUser } from "@tests/__mocks__/users.mock";
+
+const renderComponent = (user: User): HTMLElement => {
+  const container = UserCard(user);
+  document.body.appendChild(container);
+  return container;
+};
 
 describe("UserCard", () => {
   afterEach(() => {
@@ -9,63 +19,66 @@ describe("UserCard", () => {
 
   describe("render", () => {
     it("should create an article element", () => {
-      const card = UserCard(mockUser);
+      renderComponent(mockUser);
 
-      expect(card.tagName).toBe("ARTICLE");
+      const article = screen.getByRole("article");
+      expect(article).toBeInTheDocument();
+      expect(article.tagName).toBe("ARTICLE");
     });
 
     it("should have user-card class", () => {
-      const card = UserCard(mockUser);
+      renderComponent(mockUser);
 
-      expect(card.className).toBe("user-card");
+      const article = screen.getByRole("article");
+      expect(article).toHaveClass("user-card");
     });
 
     it("should display user name", () => {
-      const card = UserCard(mockUser);
-      document.body.appendChild(card);
+      renderComponent(mockUser);
 
-      const name = card.querySelector(".user-card__name");
-
+      const name = screen.getByRole("heading", { name: "John Doe" });
       expect(name).toBeInTheDocument();
-      expect(name?.textContent).toBe("John Doe");
+      expect(name).toHaveClass("user-card__name");
     });
 
     it("should display username with @ prefix", () => {
-      const card = UserCard(mockUser);
-      document.body.appendChild(card);
+      renderComponent(mockUser);
 
-      const username = card.querySelector(".user-card__username");
-
+      const username = screen.getByText("@johndoe");
       expect(username).toBeInTheDocument();
-      expect(username?.textContent).toBe("@johndoe");
+      expect(username).toHaveClass("user-card__username");
     });
 
     it("should display user email", () => {
-      const card = UserCard(mockUser);
+      renderComponent(mockUser);
 
-      expect(card.innerHTML).toContain("john@example.com");
+      const email = screen.getByText(/john@example\.com/i);
+      expect(email).toBeInTheDocument();
+      expect(email).toHaveClass("user-card__info");
     });
 
     it("should display user phone", () => {
-      const card = UserCard(mockUser);
+      renderComponent(mockUser);
 
-      expect(card.innerHTML).toContain("123-456-7890");
+      const phone = screen.getByText(/123-456-7890/i);
+      expect(phone).toBeInTheDocument();
+      expect(phone).toHaveClass("user-card__info");
     });
 
     it("should display user website", () => {
-      const card = UserCard(mockUser);
+      renderComponent(mockUser);
 
-      expect(card.innerHTML).toContain("johndoe.com");
+      const website = screen.getByText(/johndoe\.com/i);
+      expect(website).toBeInTheDocument();
+      expect(website).toHaveClass("user-card__info");
     });
 
     it("should display company name", () => {
-      const card = UserCard(mockUser);
-      document.body.appendChild(card);
+      renderComponent(mockUser);
 
-      const company = card.querySelector(".user-card__company");
-
+      const company = screen.getByText(/Doe Inc/i);
       expect(company).toBeInTheDocument();
-      expect(company?.textContent).toContain("Doe Inc");
+      expect(company).toHaveClass("user-card__company");
     });
   });
 });

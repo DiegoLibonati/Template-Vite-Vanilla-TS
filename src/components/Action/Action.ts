@@ -1,10 +1,7 @@
 import type { ActionProps } from "@/types/props";
+import type { ActionElement } from "@/types/components";
 
 import "@/components/Action/Action.css";
-
-interface ActionElement extends HTMLButtonElement {
-  cleanup: () => void;
-}
 
 export const Action = ({
   id,

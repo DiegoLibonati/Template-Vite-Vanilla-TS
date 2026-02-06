@@ -1,32 +1,47 @@
+import { screen } from "@testing-library/dom";
+
 import { AboutPage } from "@/pages/AboutPage/AboutPage";
 
+const renderPage = (): HTMLElement => {
+  const container = AboutPage();
+  document.body.appendChild(container);
+  return container;
+};
+
 describe("AboutPage", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   describe("render", () => {
     it("should create a main element", () => {
-      const page = AboutPage();
+      renderPage();
 
-      expect(page.tagName).toBe("MAIN");
+      const main = screen.getByRole("main");
+      expect(main).toBeInTheDocument();
+      expect(main.tagName).toBe("MAIN");
     });
 
     it("should have about-page class", () => {
-      const page = AboutPage();
+      renderPage();
 
-      expect(page.className).toBe("about-page");
+      const main = screen.getByRole("main");
+      expect(main).toHaveClass("about-page");
     });
 
     it("should render title", () => {
-      const page = AboutPage();
+      renderPage();
 
-      const title = page.querySelector(".title");
-      expect(title).toBeTruthy();
-      expect(title?.textContent).toBe("About Page");
+      const title = screen.getByRole("heading", { name: "About Page" });
+      expect(title).toBeInTheDocument();
+      expect(title).toHaveClass("title");
     });
 
     it("should render links container", () => {
-      const page = AboutPage();
+      const page = renderPage();
 
-      const links = page.querySelector(".links");
-      expect(links).toBeTruthy();
+      const links = page.querySelector<HTMLDivElement>(".links");
+      expect(links).toBeInTheDocument();
     });
   });
 });

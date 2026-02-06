@@ -1,84 +1,111 @@
+import { screen } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+
+import type { ActionProps } from "@/types/props";
+import type { ActionElement } from "@/types/components";
+
 import { Action } from "@/components/Action/Action";
 
+const renderComponent = (props: ActionProps): ActionElement => {
+  const container = Action(props);
+  document.body.appendChild(container);
+  return container;
+};
+
 describe("Action", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   describe("render", () => {
     it("should create a button element", () => {
-      const action = Action({
+      renderComponent({
         id: "test-id",
         ariaLabel: "test label",
         onClick: jest.fn(),
       });
 
-      expect(action.tagName).toBe("BUTTON");
+      const button = screen.getByRole("button", { name: "test label" });
+      expect(button).toBeInTheDocument();
+      expect(button.tagName).toBe("BUTTON");
     });
 
     it("should set correct id", () => {
-      const action = Action({
+      renderComponent({
         id: "my-button",
         ariaLabel: "test label",
         onClick: jest.fn(),
       });
 
-      expect(action.id).toBe("my-button");
+      const button = screen.getByRole("button", { name: "test label" });
+      expect(button.id).toBe("my-button");
     });
 
     it("should set aria-label attribute", () => {
-      const action = Action({
+      renderComponent({
         id: "test-id",
         ariaLabel: "click me button",
         onClick: jest.fn(),
       });
 
-      expect(action.getAttribute("aria-label")).toBe("click me button");
+      const button = screen.getByRole("button", { name: "click me button" });
+      expect(button).toHaveAccessibleName("click me button");
     });
 
     it("should set children as innerHTML", () => {
-      const action = Action({
+      renderComponent({
         id: "test-id",
         ariaLabel: "test label",
         onClick: jest.fn(),
         children: "Click Me",
       });
 
-      expect(action.innerHTML).toBe("Click Me");
+      const button = screen.getByRole("button", { name: "test label" });
+      expect(button.innerHTML).toBe("Click Me");
     });
 
     it("should apply custom className", () => {
-      const action = Action({
+      renderComponent({
         id: "test-id",
         ariaLabel: "test label",
         onClick: jest.fn(),
         className: "custom-class",
       });
 
-      expect(action.className).toContain("action");
-      expect(action.className).toContain("custom-class");
+      const button = screen.getByRole("button", { name: "test label" });
+      expect(button).toHaveClass("action", "custom-class");
     });
   });
 
   describe("onClick", () => {
-    it("should call onClick handler when clicked", () => {
+    it("should call onClick handler when clicked", async () => {
+      const user = userEvent.setup();
       const handleClick = jest.fn();
-      const action = Action({
+
+      renderComponent({
         id: "test-id",
         ariaLabel: "test label",
         onClick: handleClick,
       });
 
-      action.click();
+      const button = screen.getByRole("button", { name: "test label" });
+      await user.click(button);
 
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it("should pass event and id to onClick handler", () => {
+    it("should pass event and id to onClick handler", async () => {
+      const user = userEvent.setup();
       const handleClick = jest.fn();
-      const action = Action({
+
+      renderComponent({
         id: "my-button",
         ariaLabel: "test label",
         onClick: handleClick,
       });
 
-      action.click();
+      const button = screen.getByRole("button", { name: "test label" });
+      await user.click(button);
 
       expect(handleClick).toHaveBeenCalledWith(
         expect.any(MouseEvent),
@@ -88,16 +115,20 @@ describe("Action", () => {
   });
 
   describe("cleanup", () => {
-    it("should remove click event listener", () => {
+    it("should remove click event listener", async () => {
+      const user = userEvent.setup();
       const handleClick = jest.fn();
-      const action = Action({
+
+      const action = renderComponent({
         id: "test-id",
         ariaLabel: "test label",
         onClick: handleClick,
       });
 
       action.cleanup();
-      action.click();
+
+      const button = screen.getByRole("button", { name: "test label" });
+      await user.click(button);
 
       expect(handleClick).not.toHaveBeenCalled();
     });

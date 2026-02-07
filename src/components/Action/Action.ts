@@ -1,5 +1,5 @@
 import type { ActionProps } from "@/types/props";
-import type { ActionElement } from "@/types/components";
+import type { ActionComponent } from "@/types/components";
 
 import "@/components/Action/Action.css";
 
@@ -9,8 +9,8 @@ export const Action = ({
   children,
   className,
   onClick,
-}: ActionProps): ActionElement => {
-  const action = document.createElement("button") as ActionElement;
+}: ActionProps): ActionComponent => {
+  const action = document.createElement("button") as ActionComponent;
   action.id = id;
   action.className = `action ${className ?? ""}`.trim();
   action.setAttribute("aria-label", ariaLabel);

@@ -283,8 +283,8 @@ export const Action = ({
   children,
   className,
   onClick,
-}: ActionProps): ActionElement => {
-  const action = document.createElement("button") as ActionElement;
+}: ActionProps): ActionComponent => {
+  const action = document.createElement("button") as ActionComponent;
   action.id = id;
   // ... configure element
   return action;

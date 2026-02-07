@@ -1,13 +1,13 @@
 import { screen } from "@testing-library/dom";
 
-import type { PageElement } from "@/types/pages";
+import type { Page } from "@/types/pages";
 
 import { StorePage } from "@/pages/StorePage/StorePage";
 
 import { templateStore } from "@/stores/templateStore";
 
-const renderPage = (): PageElement => {
-  const container = StorePage() as PageElement;
+const renderPage = (): Page => {
+  const container = StorePage();
   document.body.appendChild(container);
   return container;
 };

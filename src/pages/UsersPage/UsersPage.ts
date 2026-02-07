@@ -1,4 +1,4 @@
-import type { PageElement } from "@/types/pages";
+import type { Page } from "@/types/pages";
 
 import { Link } from "@/components/Link/Link";
 import { UserCard } from "@/components/UserCard/UserCard";
@@ -6,11 +6,11 @@ import { userService } from "@/services/userService";
 
 import "@/pages/UsersPage/UsersPage.css";
 
-export const UsersPage = (): PageElement => {
-  const mainElement = document.createElement("main");
-  mainElement.className = "users-page";
+export const UsersPage = (): Page => {
+  const main = document.createElement("main") as Page;
+  main.className = "users-page";
 
-  mainElement.innerHTML = `
+  main.innerHTML = `
     <h1 class="title">Users Page</h1>
     <div class="users-list">
       <p class="loading">Loading users...</p>
@@ -18,8 +18,8 @@ export const UsersPage = (): PageElement => {
     <div class="links"></div>
   `;
 
-  const usersList = mainElement.querySelector<HTMLDivElement>(".users-list");
-  const links = mainElement.querySelector<HTMLDivElement>(".links");
+  const usersList = main.querySelector<HTMLDivElement>(".users-list");
+  const links = main.querySelector<HTMLDivElement>(".links");
 
   const linkHome = Link({
     id: "link-home",
@@ -52,8 +52,6 @@ export const UsersPage = (): PageElement => {
   };
 
   void loadUsers();
-
-  const main = mainElement as PageElement;
 
   main.cleanup = (): void => {
     // No event listeners to clean up

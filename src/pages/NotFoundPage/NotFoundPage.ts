@@ -1,6 +1,8 @@
+import type { Page } from "@/types/pages";
+
 import "@/pages/NotFoundPage/NotFoundPage.css";
 
-export const NotFoundPage = (): HTMLElement => {
+export const NotFoundPage = (): Page => {
   const main = document.createElement("main");
   main.className = "not-found-page";
 

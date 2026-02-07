@@ -1,12 +1,13 @@
 import { screen } from "@testing-library/dom";
 
 import type { User } from "@/types/app";
+import type { UserCardComponent } from "@/types/components";
 
 import { UserCard } from "@/components/UserCard/UserCard";
 
 import { mockUser } from "@tests/__mocks__/users.mock";
 
-const renderComponent = (user: User): HTMLElement => {
+const renderComponent = (user: User): UserCardComponent => {
   const container = UserCard(user);
   document.body.appendChild(container);
   return container;

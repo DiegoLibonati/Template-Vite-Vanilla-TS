@@ -1,8 +1,10 @@
+import type { Page } from "@/types/pages";
+
 import { Link } from "@/components/Link/Link";
 
 import "@/pages/AboutPage/AboutPage.css";
 
-export const AboutPage = (): HTMLElement => {
+export const AboutPage = (): Page => {
   const main = document.createElement("main");
   main.className = "about-page";
 

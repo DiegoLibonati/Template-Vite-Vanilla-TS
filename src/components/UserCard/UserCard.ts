@@ -1,9 +1,10 @@
 import type { User } from "@/types/app";
+import type { UserCardComponent } from "@/types/components";
 
 import "@/components/UserCard/UserCard.css";
 
-export const UserCard = (user: User): HTMLElement => {
-  const card = document.createElement("article");
+export const UserCard = (user: User): UserCardComponent => {
+  const card = document.createElement("article") as UserCardComponent;
   card.className = "user-card";
 
   card.innerHTML = `

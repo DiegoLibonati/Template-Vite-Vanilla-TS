@@ -1,4 +1,4 @@
-import type { StoreMain } from "@/types/pages";
+import type { Page } from "@/types/pages";
 
 import { Link } from "@/components/Link/Link";
 import { Action } from "@/components/Action/Action";
@@ -15,8 +15,8 @@ const subtractCounter = (value = 1): void => {
   templateStore.subtractCounter(value);
 };
 
-export const StorePage = (): HTMLElement => {
-  const main = document.createElement("main") as StoreMain;
+export const StorePage = (): Page => {
+  const main = document.createElement("main") as Page;
   main.className = "store-page";
 
   main.innerHTML = `
@@ -83,8 +83,8 @@ export const StorePage = (): HTMLElement => {
 
   main.cleanup = (): void => {
     unsubscribe();
-    actionSubtract.cleanup();
-    actionPlus.cleanup();
+    actionSubtract.cleanup?.();
+    actionPlus.cleanup?.();
     templateStore.restartCounter();
   };
 

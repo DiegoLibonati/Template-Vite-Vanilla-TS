@@ -1,6 +1,6 @@
 import { screen, waitFor } from "@testing-library/dom";
 
-import type { PageElement } from "@/types/pages";
+import type { Page } from "@/types/pages";
 
 import { UsersPage } from "@/pages/UsersPage/UsersPage";
 
@@ -12,7 +12,7 @@ jest.mock("@/services/userService");
 
 const mockedUserService = userService as jest.Mocked<typeof userService>;
 
-const renderPage = (): PageElement => {
+const renderPage = (): Page => {
   const container = UsersPage();
   document.body.appendChild(container);
   return container;

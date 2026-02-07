@@ -1,8 +1,10 @@
 import { screen } from "@testing-library/dom";
 
+import type { Page } from "@/types/pages";
+
 import { ProductPage } from "@/pages/ProductPage/ProductPage";
 
-const renderPage = (params?: { id?: string }): HTMLElement => {
+const renderPage = (params?: { id?: string }): Page => {
   const container = ProductPage(params);
   document.body.appendChild(container);
   return container;

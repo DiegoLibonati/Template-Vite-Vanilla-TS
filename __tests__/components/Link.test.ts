@@ -1,10 +1,11 @@
 import { screen } from "@testing-library/dom";
 
 import type { LinkProps } from "@/types/props";
+import type { LinkComponent } from "@/types/components";
 
 import { Link } from "@/components/Link/Link";
 
-const renderComponent = (props: LinkProps): HTMLAnchorElement => {
+const renderComponent = (props: LinkProps): LinkComponent => {
   const container = Link(props);
   document.body.appendChild(container);
   return container;

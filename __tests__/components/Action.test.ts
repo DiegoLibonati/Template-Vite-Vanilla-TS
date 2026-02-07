@@ -125,7 +125,7 @@ describe("Action", () => {
         onClick: handleClick,
       });
 
-      action.cleanup();
+      action.cleanup?.();
 
       const button = screen.getByRole("button", { name: "test label" });
       await user.click(button);

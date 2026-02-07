@@ -3,3 +3,5 @@ export interface Component {
 }
 
 export interface ActionComponent extends Component, HTMLButtonElement {}
+export interface LinkComponent extends Component, HTMLAnchorElement {}
+export interface UserCardComponent extends Component, HTMLElement {}

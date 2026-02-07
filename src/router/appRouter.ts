@@ -1,4 +1,4 @@
-import type { PageElement } from "@/types/pages";
+import type { Page } from "@/types/pages";
 import type { MatchRoute, Route } from "@/types/router";
 
 import { HomePage } from "@/pages/HomePage/HomePage";
@@ -54,7 +54,7 @@ export const renderRoute = (): void => {
 
   if (!app) return;
 
-  const current = app.firstElementChild as PageElement | null;
+  const current = app.firstElementChild as Page | null;
 
   current?.cleanup?.();
 

@@ -1,4 +1,5 @@
 import type { LinkProps } from "@/types/props";
+import type { LinkComponent } from "@/types/components";
 
 import "@/components/Link/Link.css";
 
@@ -9,8 +10,8 @@ export const Link = ({
   ariaLabel,
   children,
   className,
-}: LinkProps): HTMLAnchorElement => {
-  const a = document.createElement("a");
+}: LinkProps): LinkComponent => {
+  const a = document.createElement("a") as LinkComponent;
   a.id = id;
   a.href = href;
   a.target = target ?? "_blank";

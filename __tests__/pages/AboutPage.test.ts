@@ -1,8 +1,10 @@
 import { screen } from "@testing-library/dom";
 
+import type { Page } from "@/types/pages";
+
 import { AboutPage } from "@/pages/AboutPage/AboutPage";
 
-const renderPage = (): HTMLElement => {
+const renderPage = (): Page => {
   const container = AboutPage();
   document.body.appendChild(container);
   return container;

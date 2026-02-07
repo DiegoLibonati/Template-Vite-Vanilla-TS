@@ -1,5 +1,3 @@
-export interface PageElement extends HTMLElement {
+export interface Page extends HTMLElement {
   cleanup?: () => void;
 }
-
-export type StoreMain = PageElement;

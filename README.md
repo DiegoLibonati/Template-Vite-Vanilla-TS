@@ -48,6 +48,7 @@ No production dependencies - Pure Vanilla TypeScript
 "globals": "^17.3.0"
 "husky": "^9.1.7"
 "jest": "^29.7.0"
+"jest-environment-jsdom": "^30.2.0"
 "lint-staged": "^16.2.7"
 "prettier": "^3.8.1"
 "ts-jest": "^29.2.5"
@@ -174,13 +175,13 @@ Template-Vite-Vanilla-TS/
 ├── .prettierrc
 ├── eslint.config.js
 ├── index.html
-├── jest.config.ts
+├── jest.config.js
 ├── package.json
 ├── tsconfig.app.json
 ├── tsconfig.base.json
 ├── tsconfig.json
 ├── tsconfig.test.json
-├── vite.config.ts
+├── vite.config.js
 └── README.md
 ```
 

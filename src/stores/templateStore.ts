@@ -22,6 +22,10 @@ export class TemplateStore extends Store<TemplateState> {
   public restartCounter(): void {
     this.setState({ counter: 0 });
   }
+
+  public cleanup(): void {
+    this.restartCounter();
+  }
 }
 
 export const templateStore = new TemplateStore({

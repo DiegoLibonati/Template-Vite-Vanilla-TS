@@ -14,7 +14,7 @@ const renderPage = (): Page => {
 
 describe("StorePage", () => {
   beforeEach(() => {
-    templateStore.restartCounter();
+    templateStore.cleanup();
   });
 
   afterEach(() => {

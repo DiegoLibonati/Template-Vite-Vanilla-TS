@@ -18,8 +18,8 @@ export const UsersPage = (): Page => {
     <div class="links"></div>
   `;
 
-  const usersList = main.querySelector<HTMLDivElement>(".users-list");
-  const links = main.querySelector<HTMLDivElement>(".links");
+  const usersList = main.querySelector<HTMLDivElement>(".users-list")!;
+  const links = main.querySelector<HTMLDivElement>(".links")!;
 
   const linkHome = Link({
     id: "link-home",
@@ -29,25 +29,19 @@ export const UsersPage = (): Page => {
     target: "_self",
   });
 
-  if (links) {
-    links.appendChild(linkHome);
-  }
+  links.appendChild(linkHome);
 
   const loadUsers = async (): Promise<void> => {
     try {
       const users = await userService.getAll();
 
-      if (usersList) {
-        usersList.innerHTML = "";
-        users.forEach((user) => {
-          usersList.appendChild(UserCard(user));
-        });
-      }
+      usersList.innerHTML = "";
+      users.forEach((user) => {
+        usersList.appendChild(UserCard(user));
+      });
     } catch {
-      if (usersList) {
-        usersList.innerHTML =
-          '<p class="error">Error loading users. Please try again.</p>';
-      }
+      usersList.innerHTML =
+        '<p class="error">Error loading users. Please try again.</p>';
     }
   };
 

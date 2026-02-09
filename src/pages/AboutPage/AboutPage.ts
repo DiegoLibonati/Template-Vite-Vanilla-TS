@@ -14,7 +14,7 @@ export const AboutPage = (): Page => {
     <div class="links"></div>
   `;
 
-  const links = main.querySelector<HTMLDivElement>(".links");
+  const links = main.querySelector<HTMLDivElement>(".links")!;
 
   const linkProduct = Link({
     id: "link-product",
@@ -32,9 +32,7 @@ export const AboutPage = (): Page => {
     target: "_self",
   });
 
-  if (links) {
-    links.append(linkProduct, linkStore);
-  }
+  links.append(linkProduct, linkStore);
 
   return main;
 };

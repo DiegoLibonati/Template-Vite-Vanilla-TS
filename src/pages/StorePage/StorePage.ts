@@ -29,10 +29,10 @@ export const StorePage = (): Page => {
     <div class="links"></div>
   `;
 
-  const links = main.querySelector<HTMLDivElement>(".links");
-  const counter = main.querySelector<HTMLDivElement>(".counter");
+  const links = main.querySelector<HTMLDivElement>(".links")!;
+  const counter = main.querySelector<HTMLDivElement>(".counter")!;
   const counterNumber =
-    main.querySelector<HTMLHeadingElement>(".counter__number");
+    main.querySelector<HTMLHeadingElement>(".counter__number")!;
 
   const linkNotExists = Link({
     id: "link-not-exists",
@@ -62,21 +62,15 @@ export const StorePage = (): Page => {
     children: "+",
   });
 
-  if (links) {
-    links.append(linkNotExists);
-  }
+  links.append(linkNotExists);
 
-  if (counter && counterNumber) {
-    counter.append(actionPlus);
-    counter.insertBefore(actionSubtract, counterNumber);
-  }
+  counter.append(actionPlus);
+  counter.insertBefore(actionSubtract, counterNumber);
 
   const renderCounter = (): void => {
     const state = templateStore.getState();
 
-    if (counterNumber) {
-      counterNumber.textContent = String(state.counter);
-    }
+    counterNumber.textContent = String(state.counter);
   };
 
   const unsubscribe = templateStore.subscribe("counter", renderCounter);
@@ -85,7 +79,7 @@ export const StorePage = (): Page => {
     unsubscribe();
     actionSubtract.cleanup?.();
     actionPlus.cleanup?.();
-    templateStore.restartCounter();
+    templateStore.cleanup();
   };
 
   return main;

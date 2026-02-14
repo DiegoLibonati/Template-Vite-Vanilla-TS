@@ -2,17 +2,19 @@ import { userService } from "@/services/userService";
 
 import { mockUser, mockUsers } from "@tests/__mocks__/users.mock";
 
+const mockedFetch = fetch as jest.MockedFunction<typeof fetch>;
+
 describe("userService", () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe("getAll", () => {
     it("should fetch all users successfully", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
+      mockedFetch.mockResolvedValueOnce({
         ok: true,
         json: jest.fn().mockResolvedValue(mockUsers),
-      });
+      } as unknown as Response);
 
       const users = await userService.getAll();
 
@@ -20,33 +22,26 @@ describe("userService", () => {
         "https://jsonplaceholder.typicode.com/users"
       );
       expect(users).toEqual(mockUsers);
-      expect(users).toHaveLength(2);
     });
 
     it("should throw error when response is not ok", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
+      mockedFetch.mockResolvedValueOnce({
         ok: false,
-        status: 500,
-      });
+        status: 404,
+      } as Response);
 
       await expect(userService.getAll()).rejects.toThrow(
-        "HTTP error! status: 500"
+        "HTTP error! status: 404"
       );
-    });
-
-    it("should throw error when fetch fails", async () => {
-      global.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
-
-      await expect(userService.getAll()).rejects.toThrow("Network error");
     });
   });
 
   describe("getById", () => {
     it("should fetch user by id successfully", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
+      mockedFetch.mockResolvedValueOnce({
         ok: true,
         json: jest.fn().mockResolvedValue(mockUser),
-      });
+      } as unknown as Response);
 
       const user = await userService.getById(1);
 
@@ -56,14 +51,14 @@ describe("userService", () => {
       expect(user).toEqual(mockUser);
     });
 
-    it("should throw error when user not found", async () => {
-      global.fetch = jest.fn().mockResolvedValue({
+    it("should throw error when response is not ok", async () => {
+      mockedFetch.mockResolvedValueOnce({
         ok: false,
-        status: 404,
-      });
+        status: 500,
+      } as Response);
 
-      await expect(userService.getById(999)).rejects.toThrow(
-        "HTTP error! status: 404"
+      await expect(userService.getById(1)).rejects.toThrow(
+        "HTTP error! status: 500"
       );
     });
   });

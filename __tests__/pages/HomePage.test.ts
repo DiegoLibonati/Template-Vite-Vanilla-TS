@@ -15,42 +15,39 @@ describe("HomePage", () => {
     document.body.innerHTML = "";
   });
 
-  describe("render", () => {
-    it("should create a main element", () => {
-      renderPage();
+  it("should render the page with correct structure", () => {
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toBeInTheDocument();
-      expect(main.tagName).toBe("MAIN");
-    });
+    const main = document.querySelector<HTMLElement>(".home-page");
+    expect(main).toBeInTheDocument();
+    expect(main?.tagName).toBe("MAIN");
+  });
 
-    it("should have home-page class", () => {
-      renderPage();
+  it("should render the title", () => {
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toHaveClass("home-page");
-    });
+    const title = screen.getByRole("heading", { name: "Home Page" });
+    expect(title).toBeInTheDocument();
+  });
 
-    it("should render title", () => {
-      renderPage();
+  it("should render three links with correct attributes", () => {
+    renderPage();
 
-      const title = screen.getByRole("heading", { name: "Home Page" });
-      expect(title).toBeInTheDocument();
-      expect(title).toHaveClass("title");
-    });
+    const linkAbout = document.querySelector<HTMLAnchorElement>("#link-about");
+    const linkAbout2 =
+      document.querySelector<HTMLAnchorElement>("#link-about-2");
+    const linkUsers = document.querySelector<HTMLAnchorElement>("#link-users");
 
-    it("should render links container", () => {
-      const page = renderPage();
+    expect(linkAbout).toBeInTheDocument();
+    expect(linkAbout).toHaveAttribute("href", "/#/about");
+    expect(linkAbout).toHaveAttribute("target", "_self");
 
-      const links = page.querySelector<HTMLDivElement>(".links");
-      expect(links).toBeInTheDocument();
-    });
+    expect(linkAbout2).toBeInTheDocument();
+    expect(linkAbout2).toHaveAttribute("href", "/#/about");
+    expect(linkAbout2).toHaveAttribute("target", "_blank");
 
-    it("should contain navigation links", () => {
-      renderPage();
-
-      const links = screen.getAllByRole("link");
-      expect(links.length).toBeGreaterThan(0);
-    });
+    expect(linkUsers).toBeInTheDocument();
+    expect(linkUsers).toHaveAttribute("href", "/#/users");
+    expect(linkUsers).toHaveAttribute("target", "_self");
   });
 });

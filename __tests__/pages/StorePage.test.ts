@@ -1,4 +1,5 @@
 import { screen } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 
 import type { Page } from "@/types/pages";
 
@@ -14,78 +15,65 @@ const renderPage = (): Page => {
 
 describe("StorePage", () => {
   beforeEach(() => {
-    templateStore.cleanup();
+    templateStore.restartCounter();
   });
 
   afterEach(() => {
     document.body.innerHTML = "";
+    templateStore.restartCounter();
   });
 
-  describe("render", () => {
-    it("should create a main element", () => {
-      renderPage();
+  it("should render the page with correct structure", () => {
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toBeInTheDocument();
-      expect(main.tagName).toBe("MAIN");
-    });
-
-    it("should have store-page class", () => {
-      renderPage();
-
-      const main = screen.getByRole("main");
-      expect(main).toHaveClass("store-page");
-    });
-
-    it("should render title", () => {
-      renderPage();
-
-      const title = screen.getByRole("heading", { name: "Store Page" });
-      expect(title).toBeInTheDocument();
-      expect(title).toHaveClass("title");
-    });
-
-    it("should render counter section", () => {
-      const page = renderPage();
-
-      const counter = page.querySelector<HTMLDivElement>(".counter");
-      expect(counter).toBeInTheDocument();
-    });
-
-    it("should render counter number", () => {
-      renderPage();
-
-      const counterNumber = screen.getByRole("heading", { name: "0" });
-      expect(counterNumber).toBeInTheDocument();
-      expect(counterNumber).toHaveClass("counter__number");
-    });
-
-    it("should render action buttons", () => {
-      const page = renderPage();
-
-      const subtractBtn =
-        page.querySelector<HTMLButtonElement>(".counter__subtract");
-      const plusBtn = page.querySelector<HTMLButtonElement>(".counter__plus");
-
-      expect(subtractBtn).toBeInTheDocument();
-      expect(plusBtn).toBeInTheDocument();
-    });
+    const main = document.querySelector<HTMLElement>(".store-page");
+    expect(main).toBeInTheDocument();
+    expect(main?.tagName).toBe("MAIN");
   });
 
-  describe("cleanup", () => {
-    it("should have cleanup function", () => {
-      const page = renderPage();
+  it("should render counter with initial value of 0", () => {
+    renderPage();
 
-      expect(typeof page.cleanup).toBe("function");
+    const counterNumber =
+      document.querySelector<HTMLHeadingElement>(".counter__number");
+    expect(counterNumber?.textContent).toBe("0");
+  });
+
+  it("should increment counter when plus button clicked", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    const plusButton = screen.getByRole("button", { name: "counter plus 1" });
+    await user.click(plusButton);
+
+    const counterNumber =
+      document.querySelector<HTMLHeadingElement>(".counter__number");
+    expect(counterNumber?.textContent).toBe("1");
+  });
+
+  it("should decrement counter when minus button clicked", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    const minusButton = screen.getByRole("button", {
+      name: "counter minus 1",
     });
+    await user.click(minusButton);
 
-    it("should reset counter on cleanup", () => {
-      const page = renderPage();
-      templateStore.addCounter(10);
+    const counterNumber =
+      document.querySelector<HTMLHeadingElement>(".counter__number");
+    expect(counterNumber?.textContent).toBe("-1");
+  });
 
-      page.cleanup?.();
+  it("should cleanup store and actions on page cleanup", () => {
+    const page = renderPage();
 
-      expect(templateStore.getState().counter).toBe(0);
-    });
+    templateStore.addCounter(10);
+    expect(templateStore.get("counter")).toBe(10);
+
+    expect(page.cleanup).toBeDefined();
+    page.cleanup?.();
+
+    expect(templateStore.get("counter")).toBe(0);
   });
 });

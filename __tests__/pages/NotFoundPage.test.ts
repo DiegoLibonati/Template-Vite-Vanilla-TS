@@ -15,28 +15,18 @@ describe("NotFoundPage", () => {
     document.body.innerHTML = "";
   });
 
-  describe("render", () => {
-    it("should create a main element", () => {
-      renderPage();
+  it("should render the page with correct structure", () => {
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toBeInTheDocument();
-      expect(main.tagName).toBe("MAIN");
-    });
+    const main = document.querySelector<HTMLElement>(".not-found-page");
+    expect(main).toBeInTheDocument();
+    expect(main?.tagName).toBe("MAIN");
+  });
 
-    it("should have not-found-page class", () => {
-      renderPage();
+  it("should render the title", () => {
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toHaveClass("not-found-page");
-    });
-
-    it("should render title", () => {
-      renderPage();
-
-      const title = screen.getByRole("heading", { name: "Not Found Page" });
-      expect(title).toBeInTheDocument();
-      expect(title).toHaveClass("title");
-    });
+    const title = screen.getByRole("heading", { name: "Not Found Page" });
+    expect(title).toBeInTheDocument();
   });
 });

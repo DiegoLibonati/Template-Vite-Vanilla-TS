@@ -15,35 +15,33 @@ describe("AboutPage", () => {
     document.body.innerHTML = "";
   });
 
-  describe("render", () => {
-    it("should create a main element", () => {
-      renderPage();
+  it("should render the page with correct structure", () => {
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toBeInTheDocument();
-      expect(main.tagName).toBe("MAIN");
-    });
+    const main = document.querySelector<HTMLElement>(".about-page");
+    expect(main).toBeInTheDocument();
+    expect(main?.tagName).toBe("MAIN");
+  });
 
-    it("should have about-page class", () => {
-      renderPage();
+  it("should render the title", () => {
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toHaveClass("about-page");
-    });
+    const title = screen.getByRole("heading", { name: "About Page" });
+    expect(title).toBeInTheDocument();
+  });
 
-    it("should render title", () => {
-      renderPage();
+  it("should render two links", () => {
+    renderPage();
 
-      const title = screen.getByRole("heading", { name: "About Page" });
-      expect(title).toBeInTheDocument();
-      expect(title).toHaveClass("title");
-    });
+    const linkProduct = screen.getByRole("link", { name: "link-product" });
+    const linkStore = screen.getByRole("link", { name: "link-store" });
 
-    it("should render links container", () => {
-      const page = renderPage();
+    expect(linkProduct).toBeInTheDocument();
+    expect(linkProduct).toHaveAttribute("href", "/#/products/12");
+    expect(linkProduct).toHaveAttribute("target", "_self");
 
-      const links = page.querySelector<HTMLDivElement>(".links");
-      expect(links).toBeInTheDocument();
-    });
+    expect(linkStore).toBeInTheDocument();
+    expect(linkStore).toHaveAttribute("href", "/#/store");
+    expect(linkStore).toHaveAttribute("target", "_self");
   });
 });

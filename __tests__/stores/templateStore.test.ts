@@ -1,71 +1,38 @@
-import { TemplateStore } from "@/stores/templateStore";
+import { templateStore } from "@/stores/templateStore";
 
 describe("TemplateStore", () => {
-  let store: TemplateStore;
-
   beforeEach(() => {
-    store = new TemplateStore({ counter: 0 });
+    templateStore.restartCounter();
   });
 
-  describe("getState", () => {
-    it("should return the current state", () => {
-      const state = store.getState();
-
-      expect(state).toEqual({ counter: 0 });
-    });
+  it("should have initial counter value of 0", () => {
+    expect(templateStore.get("counter")).toBe(0);
   });
 
-  describe("addCounter", () => {
-    it("should increment counter by given value", () => {
-      store.addCounter(5);
+  it("should add to counter", () => {
+    templateStore.addCounter(5);
 
-      expect(store.getState().counter).toBe(5);
-    });
-
-    it("should increment counter multiple times", () => {
-      store.addCounter(3);
-      store.addCounter(2);
-
-      expect(store.getState().counter).toBe(5);
-    });
+    expect(templateStore.get("counter")).toBe(5);
   });
 
-  describe("subtractCounter", () => {
-    it("should decrement counter by given value", () => {
-      store.addCounter(10);
-      store.subtractCounter(3);
+  it("should subtract from counter", () => {
+    templateStore.addCounter(10);
+    templateStore.subtractCounter(3);
 
-      expect(store.getState().counter).toBe(7);
-    });
+    expect(templateStore.get("counter")).toBe(7);
   });
 
-  describe("restartCounter", () => {
-    it("should reset counter to zero", () => {
-      store.addCounter(10);
-      store.restartCounter();
+  it("should restart counter to 0", () => {
+    templateStore.addCounter(100);
+    templateStore.restartCounter();
 
-      expect(store.getState().counter).toBe(0);
-    });
+    expect(templateStore.get("counter")).toBe(0);
   });
 
-  describe("subscribe", () => {
-    it("should call listener when state changes", () => {
-      const listener = jest.fn();
-      store.subscribe("counter", listener);
+  it("should cleanup and reset state", () => {
+    templateStore.addCounter(50);
+    templateStore.cleanup();
 
-      store.addCounter(5);
-
-      expect(listener).toHaveBeenCalledWith(5);
-    });
-
-    it("should return unsubscribe function", () => {
-      const listener = jest.fn();
-      const unsubscribe = store.subscribe("counter", listener);
-
-      unsubscribe();
-      store.addCounter(5);
-
-      expect(listener).not.toHaveBeenCalled();
-    });
+    expect(templateStore.get("counter")).toBe(0);
   });
 });

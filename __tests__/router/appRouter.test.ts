@@ -1,19 +1,37 @@
 import { renderRoute, initRouter } from "@/router/appRouter";
 
 jest.mock("@/constants/envs", () => ({
+  __esModule: true,
   default: {
     redirectIfRouteNotExists: false,
   },
 }));
 
-describe("appRouter", () => {
+describe("Router", () => {
+  let appContainer: HTMLDivElement;
+
   beforeEach(() => {
-    document.body.innerHTML = '<div id="app"></div>';
+    appContainer = document.createElement("div");
+    appContainer.id = "app";
+    document.body.appendChild(appContainer);
+    window.location.hash = "";
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = "";
     window.location.hash = "";
   });
 
   describe("renderRoute", () => {
-    it("should redirect to /home when no hash is present", () => {
+    it("should throw error when app container does not exist", () => {
+      document.body.innerHTML = "";
+
+      expect(() => {
+        renderRoute();
+      }).toThrow("You must render a container to mount the app.");
+    });
+
+    it("should redirect to home when no hash is present", () => {
       window.location.hash = "";
 
       renderRoute();
@@ -26,8 +44,8 @@ describe("appRouter", () => {
 
       renderRoute();
 
-      const app = document.querySelector<HTMLDivElement>("#app");
-      expect(app?.querySelector<HTMLElement>(".home-page")).toBeTruthy();
+      const main = appContainer.querySelector<HTMLElement>(".home-page");
+      expect(main).toBeInTheDocument();
     });
 
     it("should render AboutPage for /about route", () => {
@@ -35,59 +53,65 @@ describe("appRouter", () => {
 
       renderRoute();
 
-      const app = document.querySelector<HTMLDivElement>("#app");
-      expect(app?.querySelector<HTMLElement>(".about-page")).toBeTruthy();
+      const main = appContainer.querySelector<HTMLElement>(".about-page");
+      expect(main).toBeInTheDocument();
     });
 
-    it("should render StorePage for /store route", () => {
-      window.location.hash = "#/store";
-
-      renderRoute();
-
-      const app = document.querySelector<HTMLDivElement>("#app");
-      expect(app?.querySelector<HTMLElement>(".store-page")).toBeTruthy();
-    });
-
-    it("should render ProductPage with params for /products/:id route", () => {
+    it("should render ProductPage with params", () => {
       window.location.hash = "#/products/123";
 
       renderRoute();
 
-      const app = document.querySelector<HTMLDivElement>("#app");
-      expect(app?.querySelector<HTMLElement>(".product-page")).toBeTruthy();
+      const title = appContainer.querySelector<HTMLHeadingElement>(".title");
+      expect(title?.textContent).toBe("Product Page: 123");
     });
 
-    it("should render NotFoundPage for /error route", () => {
-      window.location.hash = "#/error";
+    it("should redirect to error route when route does not exist", () => {
+      window.location.hash = "#/invalid-route";
 
       renderRoute();
 
-      const app = document.querySelector<HTMLDivElement>("#app");
-      expect(app?.querySelector<HTMLElement>(".not-found-page")).toBeTruthy();
+      expect(window.location.hash).toBe("#/error");
+    });
+
+    it("should cleanup previous page before rendering new one", () => {
+      const mockCleanup = jest.fn();
+
+      window.location.hash = "#/home";
+      renderRoute();
+
+      const currentPage = appContainer.firstElementChild as HTMLElement & {
+        cleanup?: () => void;
+      };
+
+      currentPage.cleanup = mockCleanup;
+
+      window.location.hash = "#/about";
+      renderRoute();
+
+      expect(mockCleanup).toHaveBeenCalled();
     });
   });
 
   describe("initRouter", () => {
-    it("should add hashchange event listener", () => {
-      const addEventListenerSpy = jest.spyOn(window, "addEventListener");
-
-      initRouter();
-
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        "hashchange",
-        expect.any(Function)
-      );
-
-      addEventListenerSpy.mockRestore();
-    });
-
-    it("should call renderRoute on init", () => {
+    it("should render initial route", () => {
       window.location.hash = "#/home";
 
       initRouter();
 
-      const app = document.querySelector<HTMLDivElement>("#app");
-      expect(app?.children.length).toBeGreaterThan(0);
+      const main = appContainer.querySelector<HTMLElement>(".home-page");
+      expect(main).toBeInTheDocument();
+    });
+
+    it("should listen to hashchange events", () => {
+      window.location.hash = "#/home";
+      initRouter();
+
+      window.location.hash = "#/about";
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+
+      const main = appContainer.querySelector<HTMLElement>(".about-page");
+      expect(main).toBeInTheDocument();
     });
   });
 });

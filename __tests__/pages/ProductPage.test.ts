@@ -1,10 +1,11 @@
 import { screen } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 
 import type { Page } from "@/types/pages";
 
 import { ProductPage } from "@/pages/ProductPage/ProductPage";
 
-const renderPage = (params?: { id?: string }): Page => {
+const renderPage = (params?: Record<string, string>): Page => {
   const container = ProductPage(params);
   document.body.appendChild(container);
   return container;
@@ -13,53 +14,42 @@ const renderPage = (params?: { id?: string }): Page => {
 describe("ProductPage", () => {
   afterEach(() => {
     document.body.innerHTML = "";
+    jest.clearAllMocks();
   });
 
-  describe("render", () => {
-    it("should create a main element", () => {
-      renderPage();
+  it("should render the page with product id from params", () => {
+    renderPage({ id: "42" });
 
-      const main = screen.getByRole("main");
-      expect(main).toBeInTheDocument();
-      expect(main.tagName).toBe("MAIN");
-    });
-
-    it("should have product-page class", () => {
-      renderPage();
-
-      const main = screen.getByRole("main");
-      expect(main).toHaveClass("product-page");
-    });
-
-    it("should render title with product id", () => {
-      renderPage({ id: "123" });
-
-      const title = screen.getByRole("heading", { name: /123/i });
-      expect(title).toBeInTheDocument();
-      expect(title).toHaveClass("title");
-    });
-
-    it("should render links container", () => {
-      const page = renderPage();
-
-      const links = page.querySelector<HTMLDivElement>(".links");
-      expect(links).toBeInTheDocument();
-    });
-
-    it("should render actions container", () => {
-      const page = renderPage();
-
-      const actions = page.querySelector<HTMLDivElement>(".actions");
-      expect(actions).toBeInTheDocument();
-    });
+    const title = screen.getByRole("heading", { name: "Product Page: 42" });
+    expect(title).toBeInTheDocument();
   });
 
-  describe("with params", () => {
-    it("should display product id from params", () => {
-      renderPage({ id: "456" });
+  it("should render with unknown id when no params provided", () => {
+    renderPage();
 
-      const title = screen.getByRole("heading", { name: /456/i });
-      expect(title).toBeInTheDocument();
+    const title = screen.getByRole("heading", {
+      name: "Product Page: unknown",
     });
+    expect(title).toBeInTheDocument();
+  });
+
+  it("should show alert with product id when action clicked", async () => {
+    const user = userEvent.setup();
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation();
+
+    renderPage({ id: "123" });
+
+    const button = screen.getByRole("button", { name: "action-product-id" });
+    await user.click(button);
+
+    expect(alertSpy).toHaveBeenCalledWith("Product ID: 123");
+    alertSpy.mockRestore();
+  });
+
+  it("should render link to non-existent page", () => {
+    renderPage();
+
+    const link = screen.getByRole("link", { name: "link-not-exists" });
+    expect(link).toHaveAttribute("href", "/#/pasdasdasdasd");
   });
 });

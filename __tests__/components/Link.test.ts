@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/dom";
-
 import type { LinkProps } from "@/types/props";
 import type { LinkComponent } from "@/types/components";
 
@@ -11,104 +10,51 @@ const renderComponent = (props: LinkProps): LinkComponent => {
   return container;
 };
 
-describe("Link", () => {
+describe("Link Component", () => {
   afterEach(() => {
     document.body.innerHTML = "";
   });
 
-  describe("render", () => {
-    it("should create an anchor element", () => {
-      renderComponent({
-        id: "test-id",
-        href: "/test",
-        ariaLabel: "test label",
-      });
+  const defaultProps: LinkProps = {
+    id: "test-link",
+    href: "https://example.com",
+    ariaLabel: "Test link",
+    children: "Click here",
+  };
 
-      const link = screen.getByRole("link", { name: "test label" });
-      expect(link).toBeInTheDocument();
-      expect(link.tagName).toBe("A");
-    });
+  it("should render link with correct attributes", () => {
+    renderComponent(defaultProps);
 
-    it("should set correct id", () => {
-      renderComponent({
-        id: "my-link",
-        href: "/test",
-        ariaLabel: "test label",
-      });
-
-      const link = screen.getByRole("link", { name: "test label" });
-      expect(link.id).toBe("my-link");
-    });
-
-    it("should set href attribute", () => {
-      renderComponent({
-        id: "test-id",
-        href: "/about",
-        ariaLabel: "test label",
-      });
-
-      const link = screen.getByRole("link", { name: "test label" });
-      expect(link).toHaveAttribute("href", "/about");
-    });
-
-    it("should set aria-label attribute", () => {
-      renderComponent({
-        id: "test-id",
-        href: "/test",
-        ariaLabel: "go to about page",
-      });
-
-      const link = screen.getByRole("link", { name: "go to about page" });
-      expect(link).toHaveAccessibleName("go to about page");
-    });
-
-    it("should set children as innerHTML", () => {
-      renderComponent({
-        id: "test-id",
-        href: "/test",
-        ariaLabel: "test label",
-        children: "Click Here",
-      });
-
-      const link = screen.getByRole("link", { name: "test label" });
-      expect(link.innerHTML).toBe("Click Here");
-    });
-
-    it("should apply custom className", () => {
-      renderComponent({
-        id: "test-id",
-        href: "/test",
-        ariaLabel: "test label",
-        className: "custom-link",
-      });
-
-      const link = screen.getByRole("link", { name: "test label" });
-      expect(link).toHaveClass("link", "custom-link");
-    });
+    const link = screen.getByRole("link", { name: "Test link" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("id", "test-link");
+    expect(link).toHaveAttribute("href", "https://example.com");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveClass("link");
+    expect(link.innerHTML).toBe("Click here");
   });
 
-  describe("target", () => {
-    it("should default to _blank when no target provided", () => {
-      renderComponent({
-        id: "test-id",
-        href: "/test",
-        ariaLabel: "test label",
-      });
+  it("should use custom target when provided", () => {
+    const propsWithTarget: LinkProps = {
+      ...defaultProps,
+      target: "_self",
+    };
 
-      const link = screen.getByRole("link", { name: "test label" });
-      expect(link).toHaveAttribute("target", "_blank");
-    });
+    renderComponent(propsWithTarget);
 
-    it("should use provided target", () => {
-      renderComponent({
-        id: "test-id",
-        href: "/test",
-        ariaLabel: "test label",
-        target: "_self",
-      });
+    const link = screen.getByRole("link", { name: "Test link" });
+    expect(link).toHaveAttribute("target", "_self");
+  });
 
-      const link = screen.getByRole("link", { name: "test label" });
-      expect(link).toHaveAttribute("target", "_self");
-    });
+  it("should apply additional className when provided", () => {
+    const propsWithClass: LinkProps = {
+      ...defaultProps,
+      className: "custom-link",
+    };
+
+    renderComponent(propsWithClass);
+
+    const link = screen.getByRole("link", { name: "Test link" });
+    expect(link).toHaveClass("link", "custom-link");
   });
 });

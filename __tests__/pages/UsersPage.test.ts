@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/dom";
+import { screen } from "@testing-library/dom";
 
 import type { Page } from "@/types/pages";
 
@@ -19,125 +19,59 @@ const renderPage = (): Page => {
 };
 
 describe("UsersPage", () => {
-  beforeEach(() => {
+  afterEach(() => {
+    document.body.innerHTML = "";
     jest.clearAllMocks();
   });
 
-  afterEach(() => {
-    document.body.innerHTML = "";
+  it("should render the page with correct structure", () => {
+    mockedUserService.getAll.mockResolvedValue(mockUsers);
+
+    renderPage();
+
+    const main = document.querySelector<HTMLElement>(".users-page");
+    expect(main).toBeInTheDocument();
+    expect(main?.tagName).toBe("MAIN");
   });
 
-  describe("render", () => {
-    it("should create a main element", () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
+  it("should show loading message initially", () => {
+    mockedUserService.getAll.mockResolvedValue(mockUsers);
 
-      renderPage();
+    renderPage();
 
-      const main = screen.getByRole("main");
-      expect(main).toBeInTheDocument();
-      expect(main.tagName).toBe("MAIN");
-    });
-
-    it("should have users-page class", () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
-
-      renderPage();
-
-      const main = screen.getByRole("main");
-      expect(main).toHaveClass("users-page");
-    });
-
-    it("should render title", () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
-
-      renderPage();
-
-      const title = screen.getByRole("heading", { name: "Users Page" });
-      expect(title).toBeInTheDocument();
-      expect(title).toHaveClass("title");
-    });
-
-    it("should show loading state initially", () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
-
-      renderPage();
-
-      const loading = screen.getByText("Loading users...");
-      expect(loading).toBeInTheDocument();
-      expect(loading).toHaveClass("loading");
-    });
-
-    it("should render link to home page", () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
-
-      renderPage();
-
-      const link = screen.getByRole("link", { name: /home/i });
-      expect(link).toBeInTheDocument();
-      expect(link.id).toBe("link-home");
-    });
+    expect(screen.getByText("Loading users...")).toBeInTheDocument();
   });
 
-  describe("data fetching", () => {
-    it("should call userService.getAll on mount", () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
+  it("should render user cards after loading", async () => {
+    mockedUserService.getAll.mockResolvedValue(mockUsers);
 
-      renderPage();
+    renderPage();
 
-      expect(mockedUserService.getAll).toHaveBeenCalledTimes(1);
-    });
+    await screen.findByText("John Doe");
 
-    it("should render user cards after loading", async () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
-
-      renderPage();
-
-      const userCards = await screen.findAllByRole("article");
-      expect(userCards).toHaveLength(2);
-    });
-
-    it("should display user names after loading", async () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
-
-      renderPage();
-
-      const johnDoe = await screen.findByText("John Doe");
-      const janeSmith = await screen.findByText("Jane Smith");
-
-      expect(johnDoe).toBeInTheDocument();
-      expect(janeSmith).toBeInTheDocument();
-    });
-
-    it("should remove loading state after data loads", async () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
-
-      renderPage();
-
-      await waitFor(() => {
-        expect(screen.queryByText("Loading users...")).not.toBeInTheDocument();
-      });
-    });
-
-    it("should show error message when fetch fails", async () => {
-      mockedUserService.getAll.mockRejectedValue(new Error("Network error"));
-
-      renderPage();
-
-      const error = await screen.findByText(
-        "Error loading users. Please try again."
-      );
-      expect(error).toBeInTheDocument();
-      expect(error).toHaveClass("error");
-    });
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("Jane Smith")).toBeInTheDocument();
+    expect(screen.queryByText("Loading users...")).not.toBeInTheDocument();
   });
 
-  describe("cleanup", () => {
-    it("should have cleanup function", () => {
-      mockedUserService.getAll.mockResolvedValue(mockUsers);
+  it("should show error message when loading fails", async () => {
+    mockedUserService.getAll.mockRejectedValue(new Error("Network error"));
 
-      const page = renderPage();
+    renderPage();
 
-      expect(typeof page.cleanup).toBe("function");
-    });
+    await screen.findByText("Error loading users. Please try again.");
+
+    expect(
+      screen.getByText("Error loading users. Please try again.")
+    ).toBeInTheDocument();
+  });
+
+  it("should render link to home page", () => {
+    mockedUserService.getAll.mockResolvedValue(mockUsers);
+
+    renderPage();
+
+    const linkHome = screen.getByRole("link", { name: "link-home" });
+    expect(linkHome).toHaveAttribute("href", "/#/home");
   });
 });

@@ -1,28 +1,26 @@
 import { getLocalStorage } from "@/helpers/getLocalStorage";
 
-import { mocksLocalStorage } from "@tests/__mocks__/localStorage.mock";
-
 describe("getLocalStorage", () => {
-  describe("when item exists", () => {
-    it("should return parsed JSON value", () => {
-      const mockData = { name: "test", value: 123 };
-      mocksLocalStorage.getItem.mockReturnValue(JSON.stringify(mockData));
-
-      const result = getLocalStorage("testKey");
-
-      expect(mocksLocalStorage.getItem).toHaveBeenCalledWith("testKey");
-      expect(result).toEqual(mockData);
-    });
+  beforeEach(() => {
+    localStorage.clear();
   });
 
-  describe("when item does not exist", () => {
-    it("should return null", () => {
-      mocksLocalStorage.getItem.mockReturnValue(null);
+  afterEach(() => {
+    localStorage.clear();
+  });
 
-      const result = getLocalStorage("nonExistentKey");
+  it("should return parsed data when key exists", () => {
+    const testData = { name: "test", value: 123 };
+    localStorage.setItem("test-key", JSON.stringify(testData));
 
-      expect(mocksLocalStorage.getItem).toHaveBeenCalledWith("nonExistentKey");
-      expect(result).toBeNull();
-    });
+    const result = getLocalStorage("test-key");
+
+    expect(result).toEqual(testData);
+  });
+
+  it("should return null when key does not exist", () => {
+    const result = getLocalStorage("non-existent-key");
+
+    expect(result).toBeNull();
   });
 });

@@ -18,9 +18,7 @@ describe("userService", () => {
 
       const users = await userService.getAll();
 
-      expect(fetch).toHaveBeenCalledWith(
-        "https://jsonplaceholder.typicode.com/users"
-      );
+      expect(fetch).toHaveBeenCalledWith("/users");
       expect(users).toEqual(mockUsers);
     });
 
@@ -45,9 +43,7 @@ describe("userService", () => {
 
       const user = await userService.getById(1);
 
-      expect(fetch).toHaveBeenCalledWith(
-        "https://jsonplaceholder.typicode.com/users/1"
-      );
+      expect(fetch).toHaveBeenCalledWith("/users/1");
       expect(user).toEqual(mockUser);
     });
 

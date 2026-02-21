@@ -1,10 +1,8 @@
 import type { User } from "@/types/app";
 
-const API_BASE_URL = "https://jsonplaceholder.typicode.com";
-
 export const userService = {
   getAll: async (): Promise<User[]> => {
-    const response = await fetch(`${API_BASE_URL}/users`);
+    const response = await fetch(`/users`);
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
@@ -14,7 +12,7 @@ export const userService = {
   },
 
   getById: async (id: number): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/users/${id}`);
+    const response = await fetch(`/users/${id}`);
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 

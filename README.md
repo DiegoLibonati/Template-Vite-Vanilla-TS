@@ -367,6 +367,16 @@ Pre-commit hooks that automatically:
 - Format code with Prettier
 - Block commits with linting errors
 
+## Security
+
+### npm audit
+
+Check for vulnerabilities in dependencies:
+
+```bash
+npm audit
+```
+
 ## Known Issues
 
 None at the moment.

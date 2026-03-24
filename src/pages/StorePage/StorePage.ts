@@ -7,11 +7,11 @@ import { templateStore } from "@/stores/templateStore";
 
 import "@/pages/StorePage/StorePage.css";
 
-const addCounter = (value = 1): void => {
+const addCounter = (value: number): void => {
   templateStore.addCounter(value);
 };
 
-const subtractCounter = (value = 1): void => {
+const subtractCounter = (value: number): void => {
   templateStore.subtractCounter(value);
 };
 
@@ -46,7 +46,7 @@ export const StorePage = (): Page => {
     id: "counter-subtract",
     ariaLabel: "Decrease counter by 1",
     onClick: (): void => {
-      subtractCounter();
+      subtractCounter(1);
     },
     className: "counter__subtract",
     children: "-",
@@ -56,7 +56,7 @@ export const StorePage = (): Page => {
     id: "counter-plus",
     ariaLabel: "Increase counter by 1",
     onClick: (): void => {
-      addCounter();
+      addCounter(1);
     },
     className: "counter__plus",
     children: "+",

@@ -11,9 +11,11 @@ describe("userService", () => {
 
   describe("getAll", () => {
     it("should fetch all users successfully", async () => {
+      const mockFetchJson = jest.fn();
+
       mockedFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValue(mockUsers),
+        json: mockFetchJson.mockResolvedValue(mockUsers),
       } as unknown as Response);
 
       const users = await userService.getAll();
@@ -36,9 +38,11 @@ describe("userService", () => {
 
   describe("getById", () => {
     it("should fetch user by id successfully", async () => {
+      const mockFetchJson = jest.fn();
+
       mockedFetch.mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockResolvedValue(mockUser),
+        json: mockFetchJson.mockResolvedValue(mockUser),
       } as unknown as Response);
 
       const user = await userService.getById(1);

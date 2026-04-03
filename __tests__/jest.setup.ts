@@ -2,6 +2,8 @@ import "@testing-library/jest-dom";
 
 import { mocksLocalStorage } from "@tests/__mocks__/localStorage.mock";
 
+const mockFetch = jest.fn();
+
 Object.defineProperty(global, "localStorage", {
   value: {
     getItem: mocksLocalStorage.getItem,
@@ -14,4 +16,4 @@ Object.defineProperty(global, "localStorage", {
   writable: true,
 });
 
-global.fetch = jest.fn();
+global.fetch = mockFetch;

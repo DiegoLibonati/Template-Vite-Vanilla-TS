@@ -1,4 +1,4 @@
-# TypescriptSpaBoilerplate
+# TypescriptViteBoilerplate
 
 ## Educational Purpose
 
@@ -17,7 +17,7 @@ The application will open automatically at `http://localhost:3000`
 
 ## Description
 
-**TypescriptSpaBoilerplate** is a starting point for building Single Page Applications with **Vanilla TypeScript** and **Vite**, without frameworks or runtime dependencies.
+**TypescriptViteBoilerplate** is a starting point for building Single Page Applications with **Vanilla TypeScript** and **Vite**, without frameworks or runtime dependencies.
 
 **The problem it solves:** every time you start a vanilla TypeScript SPA from scratch you end up making the same decisions — how to handle routing, how to manage state, how to structure components, how to wire up linting, formatting, and tests. This boilerplate makes those decisions once so you can clone it and go straight to writing product logic.
 
@@ -92,7 +92,7 @@ No production dependencies - Pure Vanilla TypeScript
 
 ## Portfolio Link
 
-[`https://www.diegolibonati.com.ar/#/project/typescript-spa-boilerplate`](https://www.diegolibonati.com.ar/#/project/typescript-spa-boilerplate)
+[`https://www.diegolibonati.com.ar/#/project/typescript-vite-boilerplate`](https://www.diegolibonati.com.ar/#/project/typescript-vite-boilerplate)
 
 ## Testing
 
@@ -120,7 +120,7 @@ VITE_TEMPLATE_API_URL=https://jsonplaceholder.typicode.com
 ## Project Structure
 
 ```
-typescript-spa-boilerplate/
+typescript-vite-boilerplate/
 ├── __tests__/
 │   ├── __mocks__/
 │   │   ├── file.mock.ts

@@ -40,6 +40,8 @@ The application will open automatically at `http://localhost:3000`
 2. Vite
 3. HTML5
 4. CSS3
+5. Docker
+6. Nginx
 
 ## Libraries Used
 

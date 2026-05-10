@@ -6,15 +6,6 @@ This project was created primarily for **educational and learning purposes**.
 While it is well-structured and could technically be used in production, it is **not intended for commercialization**.  
 The main goal is to explore and demonstrate best practices, patterns, and technologies in software development.
 
-## Getting Started
-
-1. Clone the repository
-2. Navigate to the project folder
-3. Execute: `npm install`
-4. Execute: `npm run dev`
-
-The application will open automatically at `http://localhost:3000`
-
 ## Description
 
 **Typescript Vite Boilerplate** is a starting point for building Single Page Applications with **Vanilla TypeScript** and **Vite**, without frameworks or runtime dependencies.
@@ -31,6 +22,7 @@ The application will open automatically at `http://localhost:3000`
 - **Jest 30 + ts-jest + jsdom + Testing Library** fully configured with path aliases, CSS mocks, and a 70% coverage threshold enforced across branches, functions, lines, and statements
 - **Typed environment variables** accessed through a constants layer so `import.meta.env` is never scattered across the codebase
 - **Path aliases** (`@/*` → `src/*`, `@tests/*` → `__tests__/*`) configured in TypeScript, Vite, and Jest
+- **Docker support** for both development (hot reload via volume mount) and production (multi-stage build, Nginx + non-root user)
 
 **How to use it:** clone the repository, rename the project in `package.json`, delete the template pages and components you don't need (`StorePage`, `UsersPage`, etc.), replace `templateStore` with your own stores, and add your routes to the router. The infrastructure — routing, state, testing, linting — stays untouched.
 
@@ -75,85 +67,55 @@ No production dependencies - Pure Vanilla TypeScript
 "vite": "^7.1.6"
 ```
 
-## Available Scripts
+## Getting Started
 
-| Command                 | Description                   |
-| ----------------------- | ----------------------------- |
-| `npm run dev`           | Start development server      |
-| `npm run build`         | Build for production          |
-| `npm run preview`       | Preview production build      |
-| `npm run test`          | Run tests                     |
-| `npm run test:watch`    | Run tests in watch mode       |
-| `npm run test:coverage` | Run tests with coverage       |
-| `npm run lint`          | Check for linting errors      |
-| `npm run lint:fix`      | Fix linting errors            |
-| `npm run lint:all`      | Fix linting all (src - tests) |
-| `npm run format`        | Format code with Prettier     |
-| `npm run format:check`  | Check code formatting         |
-| `npm run format:all`    | Format Prettier (src - tests) |
-| `npm run type-check`    | Run TypeScript type checking  |
+With the stack in mind, follow these steps to get the project running locally:
 
-## Portfolio Link
+1. Clone the repository
+2. Navigate to the project folder
+3. Copy the example environment file: `cp .env.example .env`
+4. Install dependencies: `npm install`
+5. Start the development server: `npm run dev`
 
-[`https://www.diegolibonati.com.ar/#/project/typescript-vite-boilerplate`](https://www.diegolibonati.com.ar/#/project/typescript-vite-boilerplate)
+The application will open automatically at `http://localhost:3000`.
 
-## Testing
+Useful commands during development:
 
-1. Navigate to the project folder
-2. Execute: `npm test`
+| Command              | Description                              |
+| -------------------- | ---------------------------------------- |
+| `npm run dev`        | Start the development server (port 3000) |
+| `npm run type-check` | Run TypeScript type checking             |
+| `npm run format`     | Format all source files with Prettier    |
 
-For coverage report:
+### Pre-Commit for Development
 
-```bash
-npm run test:coverage
-```
+`npm install` automatically runs Husky's `prepare` script, which activates the Git hook in `.husky/pre-commit`. From that point on, every commit triggers `lint-staged`, which runs:
 
-## Production
+- **ESLint + Prettier** on staged `.ts` and `.js` files (autofix on, blocks the commit if any error remains)
+- **Prettier** on staged `.json`, `.css`, `.md`, and `.html` files
 
-The project includes Docker support for both development and production environments.
+The ESLint configuration (`eslint.config.js`) enforces TypeScript strict rules: explicit return types, no `any`, consistent type imports, and no unused variables. Prettier enforces 2-space indentation, semicolons, double quotes, and ES5 trailing commas.
 
-### Development
+You can also run the linters manually at any time:
 
-Mounts the project directory as a volume so changes are reflected immediately (hot reload).
-
-```bash
-docker compose -f dev.docker-compose.yml up --build
-```
-
-The app will be available at `http://localhost:3000`.
-
-### Production
-
-Multi-stage build: Node 22 compiles the TypeScript and generates the static bundle, then Nginx serves it. The final image contains no Node.js or source code.
-
-```bash
-docker compose -f prod.docker-compose.yml up --build -d
-```
-
-The app will be available at `http://localhost:3000`.
-
-### Production Setup Details
-
-| Aspect           | Detail                                                                               |
-| ---------------- | ------------------------------------------------------------------------------------ |
-| Builder image    | `node:22-alpine` — compiles and bundles via `npm run build`                          |
-| Runner image     | `nginx:stable-alpine` — serves only the static `dist/` output                        |
-| Non-root user    | `appuser` (UID 1001) — nginx master and worker processes run without root privileges |
-| Internal port    | `8080` — non-root processes cannot bind to ports below 1024                          |
-| Gzip             | Enabled for JS, CSS, JSON, SVG and plain text                                        |
-| Static assets    | Cached for 1 year (`Cache-Control: immutable`)                                       |
-| HTML / routes    | `no-cache` — ensures users always get the latest `index.html`                        |
-| SPA fallback     | All unknown paths serve `index.html` to support client-side routing                  |
-| Security headers | `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`                       |
-| Logs             | Redirected to stdout/stderr for Docker log collection                                |
-| Healthcheck      | HTTP probe every 30s — restarts the container after 3 consecutive failures           |
+| Command                | Description                                       |
+| ---------------------- | ------------------------------------------------- |
+| `npm run lint`         | Check for linting errors                          |
+| `npm run lint:fix`     | Fix linting errors in `src/`                      |
+| `npm run lint:all`     | Fix linting errors across `src/` and `__tests__/` |
+| `npm run format:check` | Check formatting without writing changes          |
+| `npm run format:all`   | Format both `src/` and `__tests__/`               |
 
 ## Env Keys
+
+Variables are loaded from `.env` (created in step 3 above) and exposed through `src/constants/envs.ts` so `import.meta.env` is never accessed directly from feature code.
 
 | Key                                 | Description                                                                        |
 | ----------------------------------- | ---------------------------------------------------------------------------------- |
 | `VITE_REDIRECT_IF_ROUTE_NOT_EXISTS` | If `true`, redirects to home when route doesn't exist. If `false`, shows 404 page. |
 | `VITE_TEMPLATE_API_URL`             | Users API URL.                                                                     |
+
+Example `.env`:
 
 ```bash
 VITE_REDIRECT_IF_ROUTE_NOT_EXISTS=false
@@ -265,6 +227,8 @@ typescript-vite-boilerplate/
 | `src/types/`           | TypeScript types and interfaces                       |
 
 ## Architecture & Design Patterns
+
+The folder structure above maps directly onto a layered architecture: pages compose components, components consume props, and both subscribe to stores for shared state.
 
 ### Component Architecture
 
@@ -405,44 +369,102 @@ export default StorePage;
 
 **Benefit**: Each page/component manages its own cleanup, preventing memory leaks.
 
-## Code Quality Tools
+## Testing
 
-### ESLint
+The project uses **Jest 30** with `ts-jest` and `jsdom`, plus Testing Library. Setup lives in `__tests__/jest.setup.ts`. CSS and image imports are mocked, and coverage is collected from `src/**/*.ts` (excluding `index.ts`, `.d.ts`, and `types/`).
 
-Configured with TypeScript strict rules:
+Run the suite:
 
-- Explicit return types required
-- No `any` type allowed
-- Consistent type imports
-- No unused variables
+| Command                 | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| `npm run test`          | Run all tests (verbose)                           |
+| `npm run test:watch`    | Watch mode                                        |
+| `npm run test:coverage` | Run with coverage report (70% threshold enforced) |
 
-### Prettier
+Run a single test file:
 
-Automatic code formatting:
+```bash
+npx jest __tests__/path/to/file.test.ts
+```
 
-- 2 spaces indentation
-- Semicolons required
-- Double quotes
-- Trailing commas (ES5)
+## Security Audit
 
-### Husky + lint-staged
-
-Pre-commit hooks that automatically:
-
-- Run ESLint + Prettier on staged `.ts` and `.js` files
-- Run Prettier on staged `.json`, `.css`, `.md`, and `.html` files
-- Block commits with linting errors
-
-## Security
-
-### npm audit
-
-Check for vulnerabilities in dependencies:
+Before building or shipping, audit production dependencies for known vulnerabilities:
 
 ```bash
 npm audit
 ```
 
+For a production-only check (ignores devDependencies):
+
+```bash
+npm audit --omit=dev
+```
+
+## Build
+
+Once the test suite is green and the audit is clean, generate the production bundle:
+
+```bash
+npm run build
+```
+
+This runs `tsc -b` followed by `vite build`, emitting the static assets to `dist/`. To inspect the output locally before shipping, use the preview server:
+
+```bash
+npm run preview
+```
+
+The preview server runs at `http://localhost:3001`.
+
+## Production
+
+The Production flow assumes the previous steps already passed: [Testing](#testing), [Security Audit](#security-audit), and [Build](#build). What this section adds is the Docker pipeline plus the production-specific environment file.
+
+### Production environment file
+
+Create a `.env` (or override the values in your deployment platform) with the URLs and flags appropriate for production. The same keys documented in [Env Keys](#env-keys) apply.
+
+### Docker — Development
+
+Mounts the project directory as a volume so changes are reflected immediately (hot reload).
+
+```bash
+docker compose -f dev.docker-compose.yml up --build
+```
+
+The app will be available at `http://localhost:3000`.
+
+### Docker — Production
+
+Multi-stage build: Node 22 compiles the TypeScript and generates the static bundle (same `npm run build` invoked in the [Build](#build) section), then Nginx serves it. The final image contains no Node.js or source code.
+
+```bash
+docker compose -f prod.docker-compose.yml up --build -d
+```
+
+The app will be available at `http://localhost:3000`.
+
+### Production Setup Details
+
+| Aspect           | Detail                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| Builder image    | `node:22-alpine` — compiles and bundles via `npm run build`                          |
+| Runner image     | `nginx:stable-alpine` — serves only the static `dist/` output                        |
+| Non-root user    | `appuser` (UID 1001) — nginx master and worker processes run without root privileges |
+| Internal port    | `8080` — non-root processes cannot bind to ports below 1024                          |
+| Gzip             | Enabled for JS, CSS, JSON, SVG and plain text                                        |
+| Static assets    | Cached for 1 year (`Cache-Control: immutable`)                                       |
+| HTML / routes    | `no-cache` — ensures users always get the latest `index.html`                        |
+| SPA fallback     | All unknown paths serve `index.html` to support client-side routing                  |
+| Security headers | `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`                       |
+| Logs             | Redirected to stdout/stderr for Docker log collection                                |
+| Healthcheck      | HTTP probe every 30s — restarts the container after 3 consecutive failures           |
+
 ## Known Issues
 
 None at the moment.
+
+## Portfolio Link
+
+[`https://www.diegolibonati.com.ar/#/project/typescript-vite-boilerplate`](https://www.diegolibonati.com.ar/#/project/typescript-vite-boilerplate)

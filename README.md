@@ -108,17 +108,6 @@ You can also run the linters manually at any time:
 | `npm run format:check` | Check formatting without writing changes          |
 | `npm run format:all`   | Format both `src/` and `__tests__/`               |
 
-### Continuous Integration
-
-Every push and pull request to `main` runs the full pipeline on GitHub Actions (`.github/workflows/ci.yml`). Jobs are sequential — if one fails, subsequent ones are skipped:
-
-| Job              | Runs after       | Steps                                                               |
-| ---------------- | ---------------- | ------------------------------------------------------------------- |
-| `lint-and-audit` | —                | `npm run lint`, `npm run type-check`                                |
-| `testing`        | `lint-and-audit` | `npm run test`                                                      |
-| `build`          | `testing`        | `npm run build`                                                     |
-| `build-docker`   | `build`          | `docker build Dockerfile.development`, then `Dockerfile.production` |
-
 ## Env Keys
 
 Variables are loaded from `.env` (created in step 3 above) and exposed through `src/constants/envs.ts` so `import.meta.env` is never accessed directly from feature code.
@@ -438,6 +427,62 @@ npm run preview
 ```
 
 The preview server runs at `http://localhost:3001`.
+
+## Continuous Integration
+
+The repository ships with a **GitHub Actions** pipeline defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml). It runs automatically on every `push` and `pull_request` targeting the `main` branch. The pipeline is **validation-only** — there are no release, tagging, or publishing jobs.
+
+### Pipeline overview
+
+```
+            ┌─── PR or push to main ───┐
+                          ▼
+┌────────────────┐  ┌─────────┐  ┌───────┐  ┌──────────────┐
+│ lint-and-audit │─▶│ testing │─▶│ build │─▶│ build-docker │
+└────────────────┘  └─────────┘  └───────┘  └──────────────┘
+```
+
+All four jobs run on `ubuntu-latest` and share a Node version pinned through [`.nvmrc`](.nvmrc), with the `npm` cache reused via `actions/setup-node@v4`. Each job declares `needs:` on the previous one, so a failure short-circuits the rest of the pipeline.
+
+### Validation jobs (run on every PR and push)
+
+1. **`lint-and-audit`** — `npm ci`, `npm run lint` (ESLint flat config) and `npm run type-check` (`tsc --noEmit`). Catches style violations, unused vars, missing explicit return types, `any` usage, and TypeScript errors before anything else runs. Despite the job name, `npm audit` is **not** invoked here; dependency auditing is a manual step documented in [Security Audit](#security-audit).
+2. **`testing`** — `npm ci`, `npm run test` (Jest 30 + ts-jest + jsdom + Testing Library). Runs the full suite verbosely. The 70% coverage threshold defined in [`jest.config.js`](jest.config.js) is only enforced when `npm run test:coverage` is invoked, so switch the CI step if you want the threshold to gate the pipeline.
+3. **`build`** — `npm ci`, `npm run build` (`tsc -p tsconfig.app.json && vite build`). Validates that the project type-checks under the application config and produces a static bundle under `dist/`. The artifact is not uploaded between jobs.
+4. **`build-docker`** — builds **both** images in order:
+   - `docker build -f Dockerfile.development -t app:dev .`
+   - `docker build -f Dockerfile.production -t app:prod .`
+
+   Verifies that the dev (hot-reload via volume mount) and prod (multi-stage Node 22 + Nginx) Dockerfiles still build cleanly. Images stay on the runner and are discarded when the job ends.
+
+### Where the build outputs live
+
+| Output                                | Location                                                   |
+| ------------------------------------- | ---------------------------------------------------------- |
+| Lint / type-check / test logs         | **Actions** tab on GitHub                                  |
+| Vite bundle (`dist/`)                 | Ephemeral, inside the runner — not uploaded as an artifact |
+| Docker images (`app:dev`, `app:prod`) | Ephemeral, inside the runner — not pushed to any registry  |
+
+> **Note:** GitHub's **Packages** section is for package registries (npm, GHCR, etc.) and is **not** populated by this pipeline. If you need to publish the bundle or the production image, add a job that runs only on `push` to `main` (or on tag creation) and pushes to npm / GHCR / Docker Hub — the existing `build` and `build-docker` jobs are good starting points to extend.
+
+### Running the same checks locally
+
+```bash
+# lint-and-audit
+npm ci
+npm run lint
+npm run type-check
+
+# testing
+npm run test
+
+# build
+npm run build
+
+# build-docker
+docker build -f Dockerfile.development -t app:dev .
+docker build -f Dockerfile.production -t app:prod .
+```
 
 ## Production
 
